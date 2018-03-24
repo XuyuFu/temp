@@ -166,7 +166,7 @@ function addComment(buttonId) {
 
     $.ajax({
         // url: "/addComment",
-        url: "/socialnetwork/add-comment",
+        url: "/payfun/add-comment",
         type: "POST",
         xhrFields: {
             withCredentials: true
