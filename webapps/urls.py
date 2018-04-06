@@ -19,5 +19,10 @@ from django.contrib import admin
 from payfun import views
 
 urlpatterns = [
-    url(r'^/', payfun.home),
+    url(r'^$', views.logIn),
+    url(r'^postsign/$', views.postsign),
+    url(r'^signup/', views.signUp, name="signup"),
+    url(r'^postsignup/', views.postsignup, name="postsignup"),
+
+
 ]
