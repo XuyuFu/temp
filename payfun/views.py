@@ -104,8 +104,7 @@ def launch():
         context = { 'form': launch_form }
         return render(request, 'payfun/launch.html', context)
 
-    lauched_activity = Activity(launcher = request.user, post_time=timezone.now(), 
-                       is_lauch_success = False, is_hold_success = False, 
+    lauched_activity = Activity(launcher = request.user, is_lauch_success = False, is_hold_success = False, 
                        is_start = False)
     launch_from = LaunchFrom(request.POST, instance = lauched_activity )
 
