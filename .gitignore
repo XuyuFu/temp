@@ -1,0 +1,21 @@
+*.log
+*.pot
+*.pyc
+.idea/
+
+local_settings.py
+
+# Editor backup files
+*~
+*#
+*.swp
+
+# Image files (so we don't put into the repo demo files uploaded when this app was run)
+*.jpg
+*.gif
+*.jpeg
+*.png
+
+
+# Mac OS data store file
+.DS_Store
