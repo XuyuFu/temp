@@ -16,7 +16,7 @@ class User(models.Model):
 
 class Activity(models.Model):
 	#launcher = models.CharField(max_length=100)
-	launcher = models.ForeignKey(User)
+	launcher = models.ForeignKey(User, on_delete=models.CASCADE)
 	title = models.CharField(max_length=100)
 	# brief_description = models.CharField(max_length=150)
 	content = models.CharField(max_length=1000)
@@ -31,34 +31,34 @@ class Activity(models.Model):
 	is_success = models.BooleanField(blank=True)
 
 class LauncherAndActivity(models.Model):
-	launcher = models.ForeignKey(User)
-	activity = models.ForeignKey(Activity)
+	launcher = models.ForeignKey(User, on_delete=models.CASCADE)
+	activity = models.ForeignKey(Activity, on_delete=models.CASCADE)
 
 class SponserAndActivity(models.Model):
-	sponsor = models.ForeignKey(User)
-	activity = models.ForeignKey(Activity)
+	sponsor = models.ForeignKey(User, on_delete=models.CASCADE)
+	activity = models.ForeignKey(Activity, on_delete=models.CASCADE)
 	time = models.DateTimeField(auto_now_add=True)
 	money_amount = models.FloatField()
 	is_anonymous = models.BooleanField()
 
 class Followed(models.Model):
- 	user = models.ForeignKey(User)
- 	activity = models.ForeignKey(Activity)
+ 	user = models.ForeignKey(User, on_delete=models.CASCADE)
+ 	activity = models.ForeignKey(Activity, on_delete=models.CASCADE)
 
 class Progress(models.Model):
- 	activity = models.ForeignKey(Activity)
+ 	activity = models.ForeignKey(Activity, on_delete=models.CASCADE)
  	time = models.DateTimeField(auto_now_add=True) # the time at which the progress is made
  	content = models.CharField(max_length=150)
  	picture = models.FileField(upload_to="images", blank=True)
 
 class Comment(models.Model):
- 	activity = models.ForeignKey(Activity)
- 	commenter = models.ForeignKey(User)
+ 	activity = models.ForeignKey(Activity, on_delete=models.CASCADE)
+ 	commenter = models.ForeignKey(User, on_delete=models.CASCADE)
  	comment = models.CharField(max_length=150)
  	time = models.DateTimeField(auto_now_add=True)
 
 class Notification(models.Model):
- 	activity = models.ForeignKey(Activity)
- 	sponsor = models.ForeignKey(User)
+ 	activity = models.ForeignKey(Activity, on_delete=models.CASCADE)
+ 	sponsor = models.ForeignKey(User, on_delete=models.CASCADE)
  	notification = models.CharField(max_length=150)
  	time = models.DateTimeField()
