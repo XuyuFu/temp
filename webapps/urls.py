@@ -15,14 +15,19 @@ Including another URLconf
 """
 from django.conf.urls import url
 from django.contrib import admin
-
+from django.contrib.auth import views as auth_views
 from payfun import views
+from django.views.generic.base import RedirectView
 
 urlpatterns = [
-    url(r'^$', views.logIn),
-    url(r'^postsign/$', views.postsign),
+    url(r'^$', views.login_page, name='login_page'),
+    url(r'^login_page/$', views.login_page, name='login_page'),
+    url(r'^login/$', views.tryLogin, name='login'),
     url(r'^signup/', views.signUp, name="signup"),
-    url(r'^postsignup/', views.postsignup, name="postsignup"),
-
-
+    url(r'^register/', views.register, name="register"),
+    url(r'^register/', views.register, name="register"),
+    url(r'^stream/', views.stream, name="stream"),
+    url(r'^confirm-registration/(?P<username>[a-zA-Z0-9]+)/(?P<token>[a-z0-9\-]+)$',
+        views.confirm_registration, name='confirm'),
+    url(r'^.*$', RedirectView.as_view(pattern_name='login_page', permanent=False)),
 ]

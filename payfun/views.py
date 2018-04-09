@@ -2,11 +2,17 @@
 from __future__ import unicode_literals
 
 from django.shortcuts import render, redirect, get_object_or_404
+from django.core.mail import send_mail
+from django.contrib.auth.models import User
+from django.contrib.auth import authenticate, login
+from django.core.urlresolvers import reverse
+# Used to generate a one-time-use token to verify a user's email address
+from django.contrib.auth.tokens import default_token_generator
+from django.http import HttpResponse, Http404
 from django.contrib.auth.decorators import login_required
 from django.db import transaction
 from django.utils import timezone
 import time
-import pyrebase
 
 # import PayFun.models
 # import PayFun.forms
@@ -34,7 +40,7 @@ import pyrebase
 #     message = "You launch an activity"
 #     context = { 'message': message, 'activity': lauched_activity, 'form': launch_form }
 #     return render(request, 'PayFun/global.html', context)
-config = {
+'''config = {
     'apiKey': "AIzaSyCU1lWMaRDwgkL1p-n6-kHxeDsvGK7Y1Gw",
     'authDomain': "payfun-4a679.firebaseapp.com",
     'databaseURL': "https://payfun-4a679.firebaseio.com",
@@ -44,75 +50,98 @@ config = {
 }
 firebase = pyrebase.initialize_app(config)
 authe = firebase.auth()
-database = firebase.database()
+database = firebase.database()'''
 
-def logIn(request):
+def login_page(request):
     return render(request,"login.html")
 
-def postsign(request):
-    email = request.POST.get('email')
-    passw = request.POST.get('password')
-    try:
-        user = authe.sign_in_with_email_and_password(email, passw)
-    except:
-    	print("11111111111111111111111111111")
-    	message = "invalid credential"
-    	return render(request,"login.html",{"messg":message})
-    # session_id = user['idToken']
-    # request.session['uid'] = str(session_id)
-    return render(request,"index.html",{"e":email})
-
+def tryLogin(request):
+    username = request.POST['username']
+    password = request.POST['password']
+    user = authenticate(request, username=username, password=password)
+    if user is not None:
+        login(request, user)
+        context = {}
+        context['user'] = user
+        return render(request, 'global.html', context)
+    else:
+        # Return an 'invalid login' error message.
+        return render(request, 'login.html')
 
 def signUp(request):
     return render(request, 'signup.html')
 
-
-def postsignup(request):
-    fullname = request.POST.get('fullname')
-    username = request.POST.get('username')
-    email = request.POST.get('email')
-    passw = request.POST.get('password')
-    try:
-        authe.send_email_verification(user['idToken'])
-        # user = authe.create_user_with_email_and_password(email,passw)
-    except:
-        message = "Email is already registed"
-        return  render(request, "signup.html", {"messg":message})
-    
-
-    uid = user['localId']
-
-    data={"fullname":fullname,"username":username,"status":"1"}
-
-    results = database.child("users").child(uid).push(data, user['idToken'])
-    print(user['idToken'])
-    print(user['idToken'])
-    print(user['idToken'])
-
-    message = "register successfully"
-    return render(request, "login.html", {"messg":message})
-
 # Create your views here.
 @transaction.atomic
-def launch():
+def register(request):
+    context = {}
+
+    # Just display the registration form if this is a GET request.
     if request.method == 'GET':
-        context = { 'form': LaunchFrom() }
-        return render(request, 'payfun/launch.html', context)
+        # context['form'] = RegistrationForm()
+        return render(request, 'signup.html', context)
 
-    launch_form = CreateForm(request.POST)
-    if not create_form.is_valid():
-        context = { 'form': launch_form }
-        return render(request, 'payfun/launch.html', context)
+    try:
+        with transaction.atomic():
+            # Creates a bound form from the request POST parameters and makes the
+            # form available in the request context dictionary.
+            # form = RegistrationForm(request.POST)
+            # context['form'] = form
+            context = {}
 
-    lauched_activity = Activity(launcher = request.user, is_lauch_success = False, is_hold_success = False, 
-                       is_start = False)
-    launch_from = LaunchFrom(request.POST, instance = lauched_activity )
+            # At this point, the form data is valid.  Register and login the user.
+            temp = request.POST.get('fullname')
+            new_user = User.objects.create_user(first_name=request.POST.get('first_name'),
+                                                last_name=request.POST.get('last_name'),
+                                                username=request.POST.get('username'),
+                                                password=request.POST.get('password'),
+                                                email=request.POST.get('email'))
+            new_user.is_active = False
+            new_user.save()
 
-    if not launch_form.is_valid():
-        context = { 'form': launch_form }
-        return render(request, 'payfun/launch.html', context)
+            # new_profile = Profile(user=new_user)
+            # new_profile.save()
 
-    launch_form.save()
-    message = "You launch an activity"
-    context = { 'message': message, 'activity': lauched_activity, 'form': launch_form }
-    return render(request, 'PayFun/global.html', context)
+            # Generate a one-time use token and an email message body
+            token = default_token_generator.make_token(new_user)
+
+            email_body = """
+Please click the link below to verify your email address and
+complete the registration of your account:
+
+  http://{host}{path}
+""".format(host=request.get_host(), 
+           path=reverse('confirm', args=(new_user.username, token)))
+    
+            send_mail(subject="Verify your email address",
+                      message= email_body,
+                      from_email="yuanweic@cmu.edu",
+                      recipient_list=[new_user.email])
+
+            # context['email'] = form.cleaned_data['email']
+            context['email'] = request.POST.get('email')
+
+            return render(request, 'needs_confirmation.html', context)
+
+    except Exception as e:
+        context = {}
+        print(str(e))
+        return render(request, 'signup.html', context)
+
+@transaction.atomic
+def confirm_registration(request, username, token):
+    user = get_object_or_404(User, username=username)
+
+    # Send 404 error if token is invalid
+    if not default_token_generator.check_token(user, token):
+        raise Http404
+
+    # Otherwise token was valid, activate the user.
+    user.is_active = True
+    user.save()
+
+    return render(request, 'confirmed.html', {})
+
+def stream(request):
+    context = {}
+    return render(request, 'global.html', context)
