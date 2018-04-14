@@ -4,14 +4,14 @@ from __future__ import unicode_literals
 from django.db import models
 from django.contrib.auth.models import User
 
-class User(models.Model):
-	fullname = models.CharField(max_length=100)
-	username = models.CharField(max_length=100)
-	password = models.CharField(max_length=100)
-	phone_number = models.CharField(max_length=100)
-	email = models.CharField(max_length=100)
-	# passPort = models.CharField(max_length=100)
-	credits = models.FloatField()
+# class User(models.Model):
+# 	fullname = models.CharField(max_length=100)
+# 	username = models.CharField(max_length=100)
+# 	password = models.CharField(max_length=100)
+# 	phone_number = models.CharField(max_length=100)
+# 	email = models.CharField(max_length=100)
+# 	# passPort = models.CharField(max_length=100)
+# 	credits = models.FloatField()
 
 class Activity(models.Model):
 	#launcher = models.CharField(max_length=100)
@@ -61,3 +61,18 @@ class Notification(models.Model):
  	sponsor = models.ForeignKey(User, on_delete=models.CASCADE)
  	notification = models.CharField(max_length=150)
  	time = models.DateTimeField()
+
+
+class Profile(models.Model):
+    username         = models.CharField(max_length=40)
+    first_name       = models.CharField(max_length=40,default="")
+    last_name        = models.CharField(max_length=40,default="")
+    bio              = models.CharField(max_length=40)
+    followee         = models.ManyToManyField(User, related_name='followee')
+    picture          = models.FileField(upload_to="images", blank=True)
+    content_type     = models.CharField(max_length=50,default="")
+
+    def __unicode__(self):
+        return 'Entry(id=' + str(self.id) + ')'
+
+
