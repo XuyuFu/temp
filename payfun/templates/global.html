@@ -74,6 +74,11 @@
   <!-- /#page-content-wrapper -->
 
         <div class="container" id="main_block">
+               <form method="post" action="/searchActivity/">
+                   <input type="text" id = "searchInput" name="searchInput" >
+                   <input type="submit" value="search">
+                   {% csrf_token %}
+               </form>
             <!--
             <div class="jumbotron">
                 <div class="comment">

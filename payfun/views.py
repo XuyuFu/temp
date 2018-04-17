@@ -50,59 +50,55 @@ def register(request):
         # context['form'] = RegistrationForm()
         return render(request, 'signup.html', context)
 
-    try:
-        with transaction.atomic():
-            # Creates a bound form from the request POST parameters and makes the
-            # form available in the request context dictionary.
-            # form = RegistrationForm(request.POST)
-            # context['form'] = form
-            context = {}
 
-            # At this point, the form data is valid.  Register and login the user.
-            new_user = User.objects.create_user(first_name=request.POST.get('first_name'),
-                                                last_name=request.POST.get('last_name'),
-                                                username=request.POST.get('username'),
-                                                password=request.POST.get('password'),
-                                                email=request.POST.get('email'))
-            new_user.is_active = False
-            new_user.save()
 
-            new_profile_entry = Profile(username=request.POST.get('username'), bio='default_bio', first_name=request.POST.get('first_name'),
-                                        last_name=request.POST.get('last_name'))
-            new_profile_entry.save()
+    context = {}
 
-            new_profile_form = ProfileForm(instance=new_profile_entry)
-            if new_profile_form.is_valid():
-                new_profile_form.save()
+    # At this point, the form data is valid.  Register and login the user.
+    new_user = User.objects.create_user(first_name=request.POST.get('first_name'),
+                                        last_name=request.POST.get('last_name'),
+                                        username=request.POST.get('username'),
+                                        password=request.POST.get('password'),
+                                        email=request.POST.get('email'))
+    new_user.is_active = False
+    new_user.save()
 
-            # new_profile = Profile(user=new_user)
-            # new_profile.save()
+    new_profile_entry = Profile(username=request.POST.get('username'), bio='default_bio', first_name=request.POST.get('first_name'),
+                                 last_name=request.POST.get('last_name'))
+    new_profile_entry.save()
+    #
+    # new_profile_form = ProfileForm(bio='default_bio', first_name=request.POST.get('first_name'),last_name=request.POST.get('last_name'))
+    # if new_profile_form.is_valid():
+    #     new_profile_form.save()
 
-            # Generate a one-time use token and an email message body
-            token = default_token_generator.make_token(new_user)
+    # new_profile = Profile(user=new_user)
+    # new_profile.save()
 
-            email_body = """
+    # Generate a one-time use token and an email message body
+    token = default_token_generator.make_token(new_user)
+
+    email_body = """
 Please click the link below to verify your email address and
 complete the registration of your account:
 
-  http://{host}{path}
-""".format(host=request.get_host(), 
-           path=reverse('confirm', args=(new_user.username, token)))
-    
-            send_mail(subject="Verify your email address",
-                      message= email_body,
-                      from_email="yuanweic@cmu.edu",
-                      recipient_list=[new_user.email])
+http://{host}{path}
+""".format(host=request.get_host(),
+   path=reverse('confirm', args=(new_user.username, token)))
 
-            # context['email'] = form.cleaned_data['email']
-            context['email'] = request.POST.get('email')
+    send_mail(subject="Verify your email address",
+              message= email_body,
+              from_email="yuanweic@cmu.edu",
+              recipient_list=[new_user.email])
 
-            return render(request, 'needs_confirmation.html', context)
+    # context['email'] = form.cleaned_data['email']
+    context['email'] = request.POST.get('email')
 
-    except Exception as e:
-        context = {}
-        print(str(e))
-        return render(request, 'signup.html', context)
+    return render(request, 'needs_confirmation.html', context)
+
+    # except Exception as e:
+    #     context = {}
+    #     print(str(e))
+    # return render(request, 'signup.html', context)
 
 @transaction.atomic
 def confirm_registration(request, username, token):
@@ -241,10 +237,14 @@ def launch(request):
     user = request.user
     user_type = type(user)
     lauched_activity = Activity(content = request.POST.get('description'),location = request.POST.get('location'),
-                                target_money = request.POST.get('target_money'),picture = request.POST.get('image'),
+                                target_money = request.POST.get('target_money'),picture = request.FILES['image'],
                                 title = request.POST.get('title'),launcher = request.user, post_time=timezone.now(),
-                                start_time= timezone.now(),end_time= timezone.now(),is_end = False, is_success = False,is_start = False)
-    # launch_form_final = LaunchForm(request.POST, instance = lauched_activity )
+                                start_time= timezone.now(),end_time= timezone.now(),is_end = False, is_success = False,
+                                is_start = False)
+    # launch_form_final = LaunchForm(request.POST, request.FILES)
+    # if not launch_form_final.is_valid():
+    #     print("1")
+    # launch_form_final.save();
 
     # if not launch_form_final.is_valid():
     #     print("111")
@@ -263,12 +263,21 @@ def global_stream(request):
     return render(request, 'index.html', {'activities': all_activities})
 
 def activitydetail(request, activity_id):
-    Entry = get_object_or_404(Activity,id = activity_id)
-    if(request.user.username ==Entry.launcher.username):
-        tag = '1'
+    Entry_Activity = get_object_or_404(Activity,id = activity_id)
+    Entry_Profile     = get_object_or_404(Profile, username = request.user.username)
+    if(request.user.username ==Entry_Activity.launcher.username):
+        my_activity = '1'
     else:
-        tag = '0'
-    return render(request, 'project_detail.html',{'activity':Entry, 'my_activity': tag})
+        my_activity = '0'
+
+    if Entry_Activity in Entry_Profile.follow_activity.all():
+        activity_followed = '1'
+    else:
+        activity_followed = '0';
+
+
+
+    return render(request, 'project_detail.html',{'activity':Entry_Activity, 'my_activity': my_activity,"activity_followed": activity_followed})
 
 # def activitydetail(request):
 #     return render(request, 'project_detail.html',{})
@@ -278,7 +287,6 @@ def activitydetail(request, activity_id):
 def profile(request, user_name):
     if request.method == 'GET':
         Entry = get_object_or_404(Profile, username=user_name)
-
         if request.user.username == user_name :
             Edit_form = EditForm(instance = Entry)
             followees = Entry.followee.all()
@@ -436,3 +444,45 @@ def add_progress(request):
 
     response_text = json.dumps(update_progress_data)
     return HttpResponse(response_text, content_type='application/json')
+
+@login_required
+def followActivity(request, activity_id):
+    Entry_Activity = get_object_or_404(Activity, id = activity_id)
+    Entry_Profile = get_object_or_404(Profile, username = request.user.username)
+
+    Entry_Profile.follow_activity.add(Entry_Activity)
+
+    return render(request, 'project_detail.html',{'activity':Entry_Activity, 'my_activity': '0',"activity_followed": '1'})
+
+
+@login_required
+def unfollowActivity(request, activity_id):
+    Entry_Activity = get_object_or_404(Activity, id = activity_id)
+    Entry_Profile = get_object_or_404(Profile, username=request.user.username)
+
+    Entry_Profile.follow_activity.remove(Entry_Activity)
+
+    return render(request, 'project_detail.html',
+                  {'activity': Entry_Activity, 'my_activity': '0', "activity_followed": '0'})
+
+
+
+@login_required
+def searchActivity(request):
+    name = request.POST.get('searchInput')
+    if name == '':
+        activities = Activity.objects.all()
+    else:
+        activities = Activity.objects.filter(title = name)
+    return render(request, 'global.html', {'activities': activities})
+
+
+
+
+
+
+
+
+
+
+

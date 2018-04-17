@@ -37,5 +37,9 @@ urlpatterns = [
     url(r'^photo/(?P<user_name>\S+)$', views.get_photo, name='photo'),
     url(r'^add-comment$', views.add_comment, name='add_comment'),
     url(r'^add-progress', views.add_progress, name='add_progress'),
+    url(r'^followActivity/(?P<activity_id>\S+)$', views.followActivity, name='followActivity'),
+    url(r'^unfollowActivity/(?P<activity_id>\S+)$', views.unfollowActivity, name='unfollowActivity'),
+    url(r'^searchActivity/$', views.searchActivity, name='searchActivity'),
+
 
 ]

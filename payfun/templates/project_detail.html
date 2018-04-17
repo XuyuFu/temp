@@ -11,9 +11,9 @@
 
     <title>Stream Page</title>
 
+
     <!-- Bootstrap core CSS -->
     <link href="../../vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-
     <!-- Custom styles for this template -->
     <link href="../../static/payfun/project_detail.css" rel="stylesheet">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
@@ -75,7 +75,6 @@
                     <li><a href="#"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
                   </div>
                 </nav>
-
             </div>
         </div>
   <!-- /#page-content-wrapper -->
@@ -86,10 +85,15 @@
                 <div class="comment">
 
                     <h1>{{activity.title}}</h1>
-
                     <div>
                         <p style="float: left;">
-                            <img title="profile image" class="img-circle img-responsive profile-img" src="images/default.png" height="180px" width="180px" align="middle"/>
+                            {{ activity.picture }}
+                            {{ activity.picture }}
+                            <img title="profile image" class="img-circle img-responsive profile-img" src="default2.jpeg" height="180px" width="180px" align="middle"/>
+                            <img title="profile image" class="img-circle img-responsive profile-img" src="{{ activity.picture}}" height="180px" width="180px" align="middle"/>
+                            <img title="profile image" class="img-circle img-responsive profile-img" src="/images/{{ activity.picture}}" height="180px" width="180px" align="middle"/>
+                            <img title="profile image" class="img-circle img-responsive profile-img" src="/images/images/{{ activity.picture}}" height="180px" width="180px" align="middle"/>
+
                         </p>
                         <br>
                         <br>
@@ -98,7 +102,6 @@
                         <br>
                         <br>
                         <br>
-
                     </div>
 
                     <h3>Location: {{activity.location}}</h3>
@@ -106,7 +109,25 @@
 
                     <h7>Target amount: ${{activity.target_money}}</h7>
 
-                    <h7>Follower: 10 Donator: 2</h7>  
+                    <h7>Follower: 10 Donator: 2</h7>
+                     {% if my_activity == '0' %}
+                         {% if activity_followed == '0' %}
+                                <form method="post" action="/followActivity/{{activity.id}} ">
+                                    <input type="submit" value="follow">
+                                {% csrf_token %}
+                                </form>
+                         {% endif %}
+
+                         {% if activity_followed == '1' %}
+                                   <form method="post" action="/unfollowActivity/{{activity.id}} ">
+                                    <input type="submit" value="unfollow">
+                                    {% csrf_token %}
+                                </form>
+
+                         {% endif %}
+
+                {% endif %}
+
                 </div>
 
                 <hr>
@@ -158,17 +179,14 @@
             $("#wrapper").toggleClass("toggled");
         });
     </script>
-
     <script type="text/javascript">
         $(".jumbotron").css({"background-color" : "#ffffff", "border" : "solid", "border-width" : "1px" });
     </script>
 
     <!-- strem page -->
-
     <!-- end of stream page -->
     <script src="../../static/payfun/fun.js" type="text/javascript"></script>
 </body>
-
 </html>
 
 

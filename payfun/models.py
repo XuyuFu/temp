@@ -64,15 +64,15 @@ class Notification(models.Model):
 
 
 class Profile(models.Model):
-    username         = models.CharField(max_length=40)
-    first_name       = models.CharField(max_length=40,default="")
-    last_name        = models.CharField(max_length=40,default="")
-    bio              = models.CharField(max_length=40)
-    followee         = models.ManyToManyField(User, related_name='followee')
-    picture          = models.FileField(upload_to="images", blank=True)
-    content_type     = models.CharField(max_length=50,default="")
-
-    def __unicode__(self):
-        return 'Entry(id=' + str(self.id) + ')'
+	username         = models.CharField(max_length=40)
+	first_name       = models.CharField(max_length=40,default="")
+	last_name        = models.CharField(max_length=40,default="")
+	bio              = models.CharField(max_length=40)
+	followee         = models.ManyToManyField(User, related_name='followee')
+	follow_activity  = models.ManyToManyField(Activity, related_name="follow_activity")
+	launch_activity = models.ManyToManyField(Activity, related_name="launch_activity")
+	sponser_activity = models.ManyToManyField(Activity, related_name="sponser_activity")
+	picture          = models.FileField(upload_to="images", blank=True)
+	content_type     = models.CharField(max_length=50,default="")
 
 

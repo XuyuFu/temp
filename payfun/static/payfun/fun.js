@@ -25,14 +25,10 @@ function addComment(activity_id) {
             displayError_comment(fix_response.error);
         }
     }
-    alert("hah");
+
     req.open("POST", "/add-comment", true);
-    alert("hah1");
     req.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-    alert("hah2");
-    console.log("before hah");
     req.send("comment="+itemTextValue+"&activity_id="+activity_id+"&csrfmiddlewaretoken="+getCSRFToken());
-    alert("hah3")
 
 }
 
@@ -63,14 +59,10 @@ function addProgress(activity_id) {
             displayError_progress(fix_response.error);
         }
     }
-    alert("hah");
     req.open("POST", "/add-progress", true);
-    alert("hah1");
     req.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-    alert("hah2");
     console.log("before hah");
     req.send("progress="+itemTextValue+"&activity_id="+activity_id+"&csrfmiddlewaretoken="+getCSRFToken());
-    alert("hah3")
 
 }
 
