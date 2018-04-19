@@ -25,9 +25,21 @@ urlpatterns = [
     url(r'^login/$', views.tryLogin, name='login'),
     url(r'^signup/', views.signUp, name="signup"),
     url(r'^register/', views.register, name="register"),
-    url(r'^register/', views.register, name="register"),
     url(r'^stream/', views.stream, name="stream"),
     url(r'^confirm-registration/(?P<username>[a-zA-Z0-9]+)/(?P<token>[a-z0-9\-]+)$',
         views.confirm_registration, name='confirm'),
-    url(r'^.*$', RedirectView.as_view(pattern_name='login_page', permanent=False)),
+    url(r'^launchactivity/$', views.launch, name="launCh"),
+    url(r'^activitydetail/(?P<activity_id>\S+)/$', views.activitydetail, name="activityDetail"),
+    # url(r'^.*$', RedirectView.as_view(pattern_name='login_page', permanent=False)),
+    url(r'^profile/(?P<user_name>\S+)/$', views.profile, name='profile'),
+    url(r'^followUser/(?P<user_name>\S+)$', views.followUser, name='followUser'),
+    url(r'^unfollowUser/(?P<user_name>\S+)$', views.unfollowUser, name='unfollowUser'),
+    url(r'^photo/(?P<user_name>\S+)$', views.get_photo, name='photo'),
+    url(r'^add-comment$', views.add_comment, name='add_comment'),
+    url(r'^add-progress', views.add_progress, name='add_progress'),
+    url(r'^followActivity/(?P<activity_id>\S+)$', views.followActivity, name='followActivity'),
+    url(r'^unfollowActivity/(?P<activity_id>\S+)$', views.unfollowActivity, name='unfollowActivity'),
+    url(r'^searchActivity/$', views.searchActivity, name='searchActivity'),
+
+
 ]

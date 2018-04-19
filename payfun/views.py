@@ -1,72 +1,37 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
-
 from django.shortcuts import render, redirect, get_object_or_404
 from django.core.mail import send_mail
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login
-from django.core.urlresolvers import reverse
-# Used to generate a one-time-use token to verify a user's email address
+from django.urls import reverse
+from mimetypes import guess_type
 from django.contrib.auth.tokens import default_token_generator
 from django.http import HttpResponse, Http404
 from django.contrib.auth.decorators import login_required
 from django.db import transaction
-from payfun.models import Followed, Activity, Comment
+from payfun.models import Followed, Activity, Comment, Progress
+from payfun.models import Profile
+from payfun.forms import LaunchForm, ProfileForm, EditForm, ProgressForm
 import pytz
 import json
-from datetime import datetime
 from django.utils import timezone
-import time
+from django.template.loader import render_to_string
 
-# import PayFun.models
-# import PayFun.forms
-# Create your views here.
-# def launch():
-# 	if request.method == 'GET':
-# 		context = { 'form': LaunchFrom() }
-# 		return render(request, 'payfun/launch.html', context)
-
-#     launch_form = CreateForm(request.POST)
-#     if not create_form.is_valid():
-#     	context = { 'form': launch_form }
-#     	return render(request, 'payfun/launch.html', context)
-
-#     lauched_activity = Activity(launcher = request.user, post_time=timezone.now(), 
-#     	               is_lauch_success = False, is_hold_success = False, 
-#     	               is_start = False)
-#     launch_from = LaunchFrom(request.POST, instance = lauched_activity )
-
-#     if not launch_form.is_valid():
-#     	context = { 'form': launch_form }
-#     	return render(request, 'payfun/launch.html', context)
-
-#     launch_form.save()
-#     message = "You launch an activity"
-#     context = { 'message': message, 'activity': lauched_activity, 'form': launch_form }
-#     return render(request, 'PayFun/global.html', context)
-'''config = {
-    'apiKey': "AIzaSyCU1lWMaRDwgkL1p-n6-kHxeDsvGK7Y1Gw",
-    'authDomain': "payfun-4a679.firebaseapp.com",
-    'databaseURL': "https://payfun-4a679.firebaseio.com",
-    'projectId': "payfun-4a679",
-    'storageBucket': "",
-    'messagingSenderId': "127339190594"
-}
-firebase = pyrebase.initialize_app(config)
-authe = firebase.auth()
-database = firebase.database()'''
 
 def login_page(request):
     return render(request,"login.html")
 
 def tryLogin(request):
-    username = request.POST['username']
-    password = request.POST['password']
+    username = request.POST.get('username')
+    password = request.POST.get('password')
     user = authenticate(request, username=username, password=password)
     if user is not None:
         login(request, user)
         context = {}
         context['user'] = user
+        all_activities = Activity.objects.all()
+        context['activities'] = all_activities
         return render(request, 'global.html', context)
     else:
         # Return an 'invalid login' error message.
@@ -85,52 +50,55 @@ def register(request):
         # context['form'] = RegistrationForm()
         return render(request, 'signup.html', context)
 
-    try:
-        with transaction.atomic():
-            # Creates a bound form from the request POST parameters and makes the
-            # form available in the request context dictionary.
-            # form = RegistrationForm(request.POST)
-            # context['form'] = form
-            context = {}
 
-            # At this point, the form data is valid.  Register and login the user.
-            temp = request.POST.get('fullname')
-            new_user = User.objects.create_user(first_name=request.POST.get('first_name'),
-                                                last_name=request.POST.get('last_name'),
-                                                username=request.POST.get('username'),
-                                                password=request.POST.get('password'),
-                                                email=request.POST.get('email'))
-            new_user.is_active = False
-            new_user.save()
 
-            # new_profile = Profile(user=new_user)
-            # new_profile.save()
+    context = {}
 
-            # Generate a one-time use token and an email message body
-            token = default_token_generator.make_token(new_user)
+    # At this point, the form data is valid.  Register and login the user.
+    new_user = User.objects.create_user(first_name=request.POST.get('first_name'),
+                                        last_name=request.POST.get('last_name'),
+                                        username=request.POST.get('username'),
+                                        password=request.POST.get('password'),
+                                        email=request.POST.get('email'))
+    new_user.is_active = False
+    new_user.save()
 
-            email_body = """
+    new_profile_entry = Profile(username=request.POST.get('username'), bio='default_bio', first_name=request.POST.get('first_name'),
+                                 last_name=request.POST.get('last_name'))
+    new_profile_entry.save()
+    #
+    # new_profile_form = ProfileForm(bio='default_bio', first_name=request.POST.get('first_name'),last_name=request.POST.get('last_name'))
+    # if new_profile_form.is_valid():
+    #     new_profile_form.save()
+
+    # new_profile = Profile(user=new_user)
+    # new_profile.save()
+
+    # Generate a one-time use token and an email message body
+    token = default_token_generator.make_token(new_user)
+
+    email_body = """
 Please click the link below to verify your email address and
 complete the registration of your account:
 
-  http://{host}{path}
-""".format(host=request.get_host(), 
-           path=reverse('confirm', args=(new_user.username, token)))
-    
-            send_mail(subject="Verify your email address",
-                      message= email_body,
-                      from_email="yuanweic@cmu.edu",
-                      recipient_list=[new_user.email])
+http://{host}{path}
+""".format(host=request.get_host(),
+   path=reverse('confirm', args=(new_user.username, token)))
 
-            # context['email'] = form.cleaned_data['email']
-            context['email'] = request.POST.get('email')
+    send_mail(subject="Verify your email address",
+              message= email_body,
+              from_email="yuanweic@cmu.edu",
+              recipient_list=[new_user.email])
 
-            return render(request, 'needs_confirmation.html', context)
+    # context['email'] = form.cleaned_data['email']
+    context['email'] = request.POST.get('email')
 
-    except Exception as e:
-        context = {}
-        print(str(e))
-        return render(request, 'signup.html', context)
+    return render(request, 'needs_confirmation.html', context)
+
+    # except Exception as e:
+    #     context = {}
+    #     print(str(e))
+    # return render(request, 'signup.html', context)
 
 @transaction.atomic
 def confirm_registration(request, username, token):
@@ -250,3 +218,260 @@ def addComment(request):
     responseJson = json.dumps(data)
     return HttpResponse(responseJson, content_type='application/json')'''
 
+# Create your views here.
+@transaction.atomic
+def launch(request):
+    if request.method == 'GET':
+        context = { 'form': LaunchForm() }
+        return render(request, 'create_project.html', context)
+
+    # launch_form = LaunchForm( content = request.POST.get('description'),location = request.POST.get('location'),
+    # target_money = request.POST.get('target_money'),picture = request.POST.get('image'),title = request.POST.get('title'))
+
+
+    # if not launch_form.is_valid():
+    #     print("000")
+    #     context = { 'form': launch_form}
+    #     return render(request, 'launch.html', context)
+    print("----")
+    user = request.user
+    user_type = type(user)
+    lauched_activity = Activity(content = request.POST.get('description'),location = request.POST.get('location'),
+                                target_money = request.POST.get('target_money'),picture = request.FILES['image'],
+                                title = request.POST.get('title'),launcher = request.user, post_time=timezone.now(),
+                                start_time= timezone.now(),end_time= timezone.now(),is_end = False, is_success = False,
+                                is_start = False)
+    # launch_form_final = LaunchForm(request.POST, request.FILES)
+    # if not launch_form_final.is_valid():
+    #     print("1")
+    # launch_form_final.save();
+
+    # if not launch_form_final.is_valid():
+    #     print("111")
+    #     context = { 'form': launch_form_final }
+    #     return render(request, 'create_project.html', context)
+    print("222")
+    lauched_activity.save()
+    message = "You launch an activity"
+    all_activities = Activity.objects.all()
+    context = { 'message': message, 'activities': all_activities }
+    return render(request, 'global.html', context)
+
+def global_stream(request):
+        # Gets a list of all the items in the todo-list database.
+    all_activities = Activity.objects.all()
+    return render(request, 'index.html', {'activities': all_activities})
+
+def activitydetail(request, activity_id):
+    Entry_Activity = get_object_or_404(Activity,id = activity_id)
+    Entry_Profile     = get_object_or_404(Profile, username = request.user.username)
+    if(request.user.username ==Entry_Activity.launcher.username):
+        my_activity = '1'
+    else:
+        my_activity = '0'
+
+    if Entry_Activity in Entry_Profile.follow_activity.all():
+        activity_followed = '1'
+    else:
+        activity_followed = '0';
+
+
+
+    return render(request, 'project_detail.html',{'activity':Entry_Activity, 'my_activity': my_activity,"activity_followed": activity_followed})
+
+# def activitydetail(request):
+#     return render(request, 'project_detail.html',{})
+
+
+@login_required
+def profile(request, user_name):
+    if request.method == 'GET':
+        Entry = get_object_or_404(Profile, username=user_name)
+        if request.user.username == user_name :
+            Edit_form = EditForm(instance = Entry)
+            followees = Entry.followee.all()
+            context = {
+                'entry':Entry,
+                'form': Edit_form,
+                'tag' :'1',
+                'followees':followees,
+                 }
+            return render(request, 'profile.html', context)
+
+        else:
+            Profile_form = ProfileForm(instance = Entry)
+            context = {
+                'entry':Entry,
+                'form' :Profile_form,
+                'tag':'0',
+            }
+            my_entry = Profile.objects.get(username = request.user.username)
+            follow_user = User.objects.get(username = user_name)
+            if follow_user in my_entry.followee.all():
+                context['followma']='0'
+            else:
+                context['followma']='1'
+            return render(request, 'profile.html', context)
+
+    else:
+        context = {}
+        errors = []
+        entry = Profile.objects.get(username=user_name)
+        form  = EditForm (request.POST, request.FILES, instance=entry)
+        if not form.is_valid():
+            context['form'] = form
+            context['message'] = 'Invalid input!'
+            errors.append('You must enter text to add.')
+
+        else:
+            form.save()
+            context = {
+                        'message': 'Entry updated.',
+                        'form' :form,
+                        'entry':   entry,
+                        'tag' :     '1',
+                    }
+        my_entry = Profile.objects.get(username = request.user.username)
+        followees = my_entry.followee.all()
+        context['followees'] = followees
+        context['error'] = errors
+        return render(request, 'profile.html', context)
+
+@login_required
+def followUser(request, user_name):
+    my_entry = get_object_or_404(Profile, username = request.user.username)
+    follow_user = get_object_or_404(User, username = user_name)
+    follow_entry = Profile.objects.get(username = user_name)
+
+    my_entry.followee.add(follow_user)
+    form = ProfileForm(instance = follow_entry)
+
+    context = {
+        'message': 'Successful Follow.',
+        'form' :  form,
+        'entry':  follow_entry,
+        'tag'  :  '0',
+        'followma': '0',
+    }
+    return render(request, 'profile.html', context)
+
+
+@login_required
+def unfollowUser(request, user_name):
+    my_entry = get_object_or_404(Profile, username = request.user.username)
+    follow_user = get_object_or_404(User, username = user_name)
+    follow_entry = Profile.objects.get(username = user_name)
+
+    my_entry.followee.remove(follow_user)
+    form = ProfileForm(instance = follow_entry)
+
+    context = {
+        'message': 'Successful Follow.',
+        'form' :  form,
+        'entry':  follow_entry,
+        'tag'  :  '0',
+        'followma': '1',
+    }
+    return render(request, 'profile.html', context)
+
+@login_required
+def get_photo(request, user_name):
+    profile = get_object_or_404(Profile, username=user_name)
+    # Probably don't need this check as form validation requires a picture be uploaded.
+    if not profile.picture:
+        raise Http404
+    content_type= guess_type(profile.picture.name)
+    return HttpResponse(profile.picture, content_type=profile.content_type)
+
+@login_required
+def add_comment(request):
+    if request.method != 'POST':
+        raise Http404
+    if not 'comment' in request.POST or not request.POST['comment']:
+        message = 'You must enter a comment to add.'
+        json_error = '{ "error": "'+message+'" }'
+        return HttpResponse(json_error, content_type='application/json')
+
+    print(request.POST['activity_id'])
+    print(request.POST['comment'])
+
+    print(request.user.username)
+    print(timezone.now())
+
+    target_activity = Activity.objects.get(id = request.POST['activity_id'])
+    new_comment = Comment(activity = target_activity, comment =request.POST['comment'],
+                    commenter = User.objects.get(username=request.user.username), time = timezone.now())
+    new_comment.save()
+    print(new_comment)
+    print("save")
+
+    items = Comment.objects.filter(activity = target_activity).order_by('-time')
+
+    update_comment_data = list(map(lambda x: {'html':render_to_string('comment.html',
+                    context = {"comment": x}),'post_id':x.activity.id}, items))
+
+
+    response_text = json.dumps(update_comment_data)
+    return HttpResponse(response_text, content_type='application/json')
+
+@login_required
+def add_progress(request):
+    if request.method != 'POST':
+        raise Http404
+    if not 'progress' in request.POST or not request.POST['progress']:
+        message = 'You must enter a comment to add.'
+        json_error = '{ "error": "'+message+'" }'
+        return HttpResponse(json_error, content_type='application/json')
+
+    print(request.POST['activity_id'])
+    print(request.POST['progress'])
+
+    print(request.user.username)
+    print(timezone.now())
+
+    target_activity = Activity.objects.get(id = request.POST['activity_id'])
+    new_progress = Progress(activity = target_activity, content =request.POST['progress'],
+                     time = timezone.now())
+    new_progress.save()
+    print(new_progress)
+    print("save")
+
+    items = Progress.objects.filter(activity = target_activity).order_by('-time')
+
+    update_progress_data = list(map(lambda x: {'html':render_to_string('progress.html',
+                    context = {"progress": x}),'post_id':x.activity.id}, items))
+
+
+    response_text = json.dumps(update_progress_data)
+    return HttpResponse(response_text, content_type='application/json')
+
+@login_required
+def followActivity(request, activity_id):
+    Entry_Activity = get_object_or_404(Activity, id = activity_id)
+    Entry_Profile = get_object_or_404(Profile, username = request.user.username)
+
+    Entry_Profile.follow_activity.add(Entry_Activity)
+
+    return render(request, 'project_detail.html',{'activity':Entry_Activity, 'my_activity': '0',"activity_followed": '1'})
+
+
+@login_required
+def unfollowActivity(request, activity_id):
+    Entry_Activity = get_object_or_404(Activity, id = activity_id)
+    Entry_Profile = get_object_or_404(Profile, username=request.user.username)
+
+    Entry_Profile.follow_activity.remove(Entry_Activity)
+
+    return render(request, 'project_detail.html',
+                  {'activity': Entry_Activity, 'my_activity': '0', "activity_followed": '0'})
+
+
+
+@login_required
+def searchActivity(request):
+    name = request.POST.get('searchInput')
+    if name == '':
+        activities = Activity.objects.all()
+    else:
+        activities = Activity.objects.filter(title = name)
+    return render(request, 'global.html', {'activities': activities})

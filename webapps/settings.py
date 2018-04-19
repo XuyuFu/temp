@@ -137,3 +137,5 @@ print('Email host:port = {host}:{port}, user={user}'.format(
         host=EMAIL_HOST, port=EMAIL_PORT, user=EMAIL_HOST_USER))
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'images/')
+
+STATIC_URL = '/static/'

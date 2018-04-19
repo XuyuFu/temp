@@ -1,8 +1,9 @@
+
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
-
+    {% load static %}
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="">
@@ -10,14 +11,17 @@
 
     <title>Stream Page</title>
 
+
     <!-- Bootstrap core CSS -->
     <link href="../../vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-
     <!-- Custom styles for this template -->
     <link href="../../static/payfun/project_detail.css" rel="stylesheet">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="../../static/payfun/fun.js" type="text/javascript"></script>
+    <script src="{% static 'payfun/fun.js' %}" type="text/javascript"></script>
+
 
 </head>
 
@@ -71,7 +75,6 @@
                     <li><a href="#"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
                   </div>
                 </nav>
-
             </div>
         </div>
   <!-- /#page-content-wrapper -->
@@ -81,61 +84,84 @@
             <div class="jumbotron">
                 <div class="comment">
 
-                    <h1>Paint the fence</h1>
-
+                    <h1>{{activity.title}}</h1>
                     <div>
                         <p style="float: left;">
-                            <img title="profile image" class="img-circle img-responsive profile-img" src="images/default.png" height="180px" width="180px" align="middle"/>
+                            {{ activity.picture }}
+                            {{ activity.picture }}
+                            <img title="profile image" class="img-circle img-responsive profile-img" src="default2.jpeg" height="180px" width="180px" align="middle"/>
+                            <img title="profile image" class="img-circle img-responsive profile-img" src="{{ activity.picture}}" height="180px" width="180px" align="middle"/>
+                            <img title="profile image" class="img-circle img-responsive profile-img" src="/images/{{ activity.picture}}" height="180px" width="180px" align="middle"/>
+                            <img title="profile image" class="img-circle img-responsive profile-img" src="/images/images/{{ activity.picture}}" height="180px" width="180px" align="middle"/>
+
                         </p>
                         <br>
                         <br>
-                        <h3>Posted by: <a href="profile">David</a></h3>
-                        <h3>on 2/6/2018</h3>
+                        <h3>Posted by: <a href="/profile/{{activity.launcher.username}}">{{activity.launcher.username}}</a></h3>
+                        <h3>on {{activity.post_time}}</h3>
                         <br>
                         <br>
                         <br>
-
                     </div>
 
-                    <h3>Location: Pittsburgh</h3>
-                    <p>I am going to paint the CMU fence at 3/30/2018 to celebrate the first week back from the spring break. In order to do this, I need to a brush and some paint</p>
+                    <h3>Location: {{activity.location}}</h3>
+                    <p>{{activity.content}}</p>
 
-                    <h7>Target amount: $45</h7>
+                    <h7>Target amount: ${{activity.target_money}}</h7>
 
-                    <h7>Follower: 10 Donator: 2</h7>  
+                    <h7>Follower: 10 Donator: 2</h7>
+                     {% if my_activity == '0' %}
+                         {% if activity_followed == '0' %}
+                                <form method="post" action="/followActivity/{{activity.id}} ">
+                                    <input type="submit" value="follow">
+                                {% csrf_token %}
+                                </form>
+                         {% endif %}
+
+                         {% if activity_followed == '1' %}
+                                   <form method="post" action="/unfollowActivity/{{activity.id}} ">
+                                    <input type="submit" value="unfollow">
+                                    {% csrf_token %}
+                                </form>
+
+                         {% endif %}
+
+                {% endif %}
+
                 </div>
 
                 <hr>
 
                 <div>
-                    <div>
-                        <h8>Progress on 2/7/2018 11:30pm</h8>
-                        <p> Already set up the temp around the fence and been waiting for the moment.:)</p>
-                    </div>
+                    <ol id="progress-list-{{activity.id}}"></ol>
                 </div>
+                {% if my_activity == '1' %}
+                    <br>
+                    <div>
+                        <input class="form-control" rows="1", name="progress-{{activity.id}}" id="progress-{{activity.id}}">
 
-                <div>
-                    <div>
-                        <h8>Progress on 2/7/2018 13:00pm</h8>
-                        <p>Thank you all of your help guys. I have collected enough money and is going to the bookstore to buy what I need.</p>
                     </div>
-                </div>
+                    <button type="submit" class="btn btn-primary"  onclick='addProgress({{ activity.id }})'>Update Progress</button>
+                    <span id="error-progress" class="error"></span>
+                {% endif %}
+
+
             </div>
 
             <div class="jumbotron">
                 <div class="card my-4 comment_input">
                     <h5 class="card-header">Leave a Comment:</h5>
                     <div class="card-body">
-                        <form>
                             <div class="form-group">
-                                <textarea class="form-control" rows="1"></textarea>
+                                <input class="form-control" rows="1", name="comment-{{activity.id}}" id="comment-{{activity.id}}">
                             </div>
-                            <button type="submit" class="btn btn-primary">Submit</button>
-                        </form>
+                            <button type="submit" class="btn btn-primary"  onclick='addComment({{ activity.id }})'>Submit</button>
+                            <span id="error-comment" class="error"></span>
                     </div>
                 </div>
             </div>
-
+              <ol id="comment-list-{{activity.id}}">
+            </ol>
         </div> 
     </div>
 
@@ -152,17 +178,16 @@
             e.preventDefault();
             $("#wrapper").toggleClass("toggled");
         });
-
     </script>
-
     <script type="text/javascript">
         $(".jumbotron").css({"background-color" : "#ffffff", "border" : "solid", "border-width" : "1px" });
     </script>
 
     <!-- strem page -->
-
     <!-- end of stream page -->
-
+    <script src="../../static/payfun/fun.js" type="text/javascript"></script>
 </body>
-
 </html>
+
+
+

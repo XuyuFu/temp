@@ -1,0 +1,92 @@
+
+{% for error in form.non_field_errors %}
+<p style="color: red">
+    {{ error }}
+</p>
+{% endfor %}
+    {% if tag == '1' %}
+        {{entry.username}}
+        </br></br>
+        <form method="post" enctype="multipart/form-data" action="/profile/{{user.username}}/">
+            <table>
+                <img src="/photo/{{ entry.username }}" width="200px">
+                {% for field in form.visible_fields %}
+                    <tr>
+                        <td>{{field.label_tag}}</td>
+                        <td>{{field}}</td>
+                        <td class="error">
+                            {% for error in field.errors %} {{error}} {% endfor %}
+                        </td>
+                    </tr>
+                {% endfor %}
+            </table>
+            {% for field in form.hidden_fields %}
+                {{field}} {{field.errors}}
+            {% endfor %}
+            {% csrf_token %}
+            <input type="submit" value="Update">
+        </form>
+        </br></br>
+        <div>
+            <b>You are following:</b>
+            </br>
+
+
+            {% for followee in followees %}
+            <a href="/profile/{{followee.username}}"> {{followee.username}} </a>
+            <br>
+            {% endfor %}
+
+
+        </div>
+
+
+
+    {% else %}
+        {% if followma == '1' %}
+            {{entry.username}}
+            </br></br>
+            <form method="post" action="/followUser/{{ entry.username }}">
+                <img src="/photo/{{ entry.username }}" width="200px">
+                <table>
+                    {% for field in form.visible_fields %}
+                    <tr>
+                        <td>{{field.label_tag}}</td>
+                        <td>{{field}}</td>
+                        <td class="error">
+                            {% for error in field.errors %} {{error}} {% endfor %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </table>
+                {% for field in form.hidden_fields %}
+                {{field}} {{field.errors}}
+                {% endfor %}
+                {% csrf_token %}
+                    <input type="submit" value="Follow">
+            </form>
+        {% else %}
+            {{entry.username}}
+            </br></br>
+            <form method="post" action="/unfollowUser/{{entry.username}} ">
+                <img src="/photo/{{ entry.username }}" width="200px">
+                <table>
+                    {% for field in form.visible_fields %}
+                    <tr>
+                        <td>{{field.label_tag}}</td>
+                        <td>{{field}}</td>
+                        <td class="error">
+                            {% for error in field.errors %} {{error}} {% endfor %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </table>
+                {% for field in form.hidden_fields %}
+                {{field}} {{field.errors}}
+                {% endfor %}
+                {% csrf_token %}
+                <input type="submit" value="Unfollow">
+            </form>
+        {% endif %}
+    {% endif %}
+
