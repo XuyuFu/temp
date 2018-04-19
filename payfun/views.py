@@ -11,6 +11,10 @@ from django.contrib.auth.tokens import default_token_generator
 from django.http import HttpResponse, Http404
 from django.contrib.auth.decorators import login_required
 from django.db import transaction
+from payfun.models import Followed, Activity, Comment
+import pytz
+import json
+from datetime import datetime
 from django.utils import timezone
 import time
 
@@ -145,3 +149,104 @@ def confirm_registration(request, username, token):
 def stream(request):
     context = {}
     return render(request, 'global.html', context)
+
+@login_required
+@transaction.atomic
+## there are still some changes to be made
+def followOthers(request, userId):
+    try:
+        userFollowed = User.objects.get(id=userId)
+
+        following = Followed(user1=request.user,
+                             user2=userFollowed)
+        following.save()
+    except:
+        error = 'some error happens!!'
+        context = {}
+        context["isGlobal"] = True
+        return render(request, 'stream.html', context)
+
+    # return redirect(reverse('profile'), userId=userId)
+    return redirect(reverse('detail', args=(userId,)))
+
+@login_required
+@transaction.atomic
+# change this later
+def unfollow(request, userId):
+    try:
+        userFollowed = User.objects.get(id=userId)
+        following = Followed.objects.get(user1=request.user,
+                                         user2=userFollowed)
+        following.delete()
+    except:
+        error = 'Object does not exist'
+
+    # return redirect(reverse('profile'), userId=userId)
+    return redirect(reverse('detail', args=(request.user.id,)))
+
+@login_required
+@transaction.atomic
+def addComment(request):
+    data = []
+
+    try:
+        with transaction.atomic():
+            if 'activity_id' in request.POST and 'text' in request.POST:
+                activityId = request.POST['post_id']
+                activity = Activity.objects.get(id=activityId)
+                comment = Comment(comment=request.POST['comment'],
+                                  commenter=request.user,
+                                  activity=activity)
+                comment.save()
+    except:
+        responseJson = json.dumps(data)
+        return HttpResponse(responseJson, content_type='application/json')
+
+
+    # return redirect(reverse('getCommentsJson'), request)
+
+    utc = pytz.UTC
+
+    context = {}
+    # need to add some contexts here
+
+    return render(request, 'project_detail.html', context)
+
+
+
+    '''if "most_recent_date" not in request.POST:
+        responseJson = json.dumps(data)
+        return HttpResponse(responseJson, content_type='application/json')
+
+    mostRecentDateStr = request.POST["most_recent_date"]
+    try:
+        mostRecentDate = datetime.strptime(mostRecentDateStr, "%m %d, %Y %H:%M:%S")
+        mostRecentDate = utc.localize(mostRecentDate)
+    except:
+        responseJson = json.dumps(data)
+        return HttpResponse(responseJson, content_type='application/json')
+
+    posts = Post.objects.all().order_by('created').reverse()
+
+    for post in posts:
+        try:
+            comments = Comment.objects.filter(post=post).order_by('created')
+            # comments.append(temp)
+            for comment in comments:
+
+                commentTime = comment.created.strftime("%m %d, %Y %H:%M:%S")
+                commentTimeDate = datetime.strptime(commentTime, "%m %d, %Y %H:%M:%S")
+                commentTimeDate = utc.localize(commentTimeDate)
+
+                if commentTimeDate > mostRecentDate:
+                    data.append({"post_id": post.id, "commented_by_id": comment.user.id,
+                                 "commented_by_name": comment.user.username,
+                                 "created": comment.created.strftime("%m %d, %Y %H:%M:%S"),
+                                 "text": comment.text})
+
+        except Comment.DoesNotExist:
+            continue
+
+    responseJson = json.dumps(data)
+    return HttpResponse(responseJson, content_type='application/json')'''
+

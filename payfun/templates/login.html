@@ -74,7 +74,10 @@
 							Not a member?
 						</span>
 
-						<button type="button">SignUp</button>
+						<button type="button" href="{% url 'register' %}">SignUp</button>
+                        <a href="{% url 'register' %}>
+                            SignUp
+                        </a>>
 					</div>
 
 					{% csrf_token %}
