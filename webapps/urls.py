@@ -25,7 +25,7 @@ urlpatterns = [
     url(r'^login/$', views.tryLogin, name='login'),
     url(r'^signup/', views.signUp, name="signup"),
     url(r'^register/', views.register, name="register"),
-    url(r'^stream/', views.stream, name="stream"),
+    url(r'^stream/', views.global_stream, name="stream"),
     url(r'^confirm-registration/(?P<username>[a-zA-Z0-9]+)/(?P<token>[a-z0-9\-]+)$',
         views.confirm_registration, name='confirm'),
     url(r'^launchactivity/$', views.launch, name="launCh"),
@@ -40,6 +40,6 @@ urlpatterns = [
     url(r'^followActivity/(?P<activity_id>\S+)$', views.followActivity, name='followActivity'),
     url(r'^unfollowActivity/(?P<activity_id>\S+)$', views.unfollowActivity, name='unfollowActivity'),
     url(r'^searchActivity/$', views.searchActivity, name='searchActivity'),
-
-
+    url(r'^notifications/$', views.notifications, name='notifications'),
+    url(r'^.*$', RedirectView.as_view(pattern_name='login_page', permanent=False)),
 ]

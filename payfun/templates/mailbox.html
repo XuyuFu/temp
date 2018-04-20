@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Stream Page</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="../static/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+    <link href="../static/payfun/new.css" rel="stylesheet">
+
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <style>
+        .mainBlock {
+            margin-left: 140px; /* Same width as the sidebar + left position in px */
+            font-size: 28px; /* Increased text to enable scrolling */
+            padding: 0px 10px;
+        }
+
+        .sidenav {
+            width: 160px; /* Set the width of the sidebar */
+            position: fixed; /* Fixed Sidebar (stay in place on scroll) */
+            z-index: 1; /* Stay on top */
+            left: 0;
+            overflow-x: hidden; /* Disable horizontal scroll */
+            padding: 6px 8px 6px 16px;
+        }
+
+        .list-group-item {
+            border-style: none;
+        }
+
+        #About {
+            background: url("./images/icons/write.svg") no-repeat scroll center center / 100% auto rgba(0, 0, 0, 0);
+        }
+
+        #signIn {
+            margin-right: 10px;
+        }
+
+        li {
+            margin-top: 0px;
+            margin-bottom: 0px;
+        }
+
+        hr {
+            margin-top: 0px;
+            margin-bottom: 0px;
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+
+    <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+      <a class="navbar-brand" href="#">PayFun</a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarCollapse">
+        <form class="form-inline mt-2 mt-md-0">
+          <input class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search" name="searchInput" style="margin-top: 5px;">
+          <button class="btn btn-primary" type="submit" name="searchButton" style="margin-top: 5px;"><span class="glyphicon glyphicon-search"></span></button>
+        </form>
+      </div>
+
+      <button class="btn" id="signIn">Sign in</button>
+      <button class="btn" id="signUp">Sign up</button>
+    </nav>
+
+    <div class="container" id="main_block">
+
+        <div class="sidenav">
+            
+
+            <div class="btn-group-vertical">
+                <button class="btn"><i class="fa fa-pencil-square-o"></i></i>Create</button>
+                <button class="btn"><i class="fa fa-money"></i>Donations</button>
+                <button class="btn"><i class="fa fa-archive"></i>Projects</button>
+                <button class="btn"><i class="fa fa-star"></i>Followings</button>
+                <button class="btn"><i class="fa fa-user"></i></i>Profiles</button>
+                <button class="btn"><i class="fa fa-envelope-square"></i>Notifications</button>
+            </div>
+            
+        </div>
+
+        <div class="container">
+
+            <div class="sw-example">
+  <ul class="notifications">
+    <li class="notification">
+        <div class="media">
+          <div class="media-left">
+            <div class="media-object">
+              <img data-src="holder.js/50x50?bg=cccccc" class="img-circle" alt="50x50" src="data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2250%22%20height%3D%2250%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2050%2050%22%20preserveAspectRatio%3D%22none%22%3E%3Cdefs%3E%3Cstyle%20type%3D%22text%2Fcss%22%3E%23holder_162c778879f%20text%20%7B%20fill%3A%23919191%3Bfont-weight%3Abold%3Bfont-family%3AArial%2C%20Helvetica%2C%20Open%20Sans%2C%20sans-serif%2C%20monospace%3Bfont-size%3A10pt%20%7D%20%3C%2Fstyle%3E%3C%2Fdefs%3E%3Cg%20id%3D%22holder_162c778879f%22%3E%3Crect%20width%3D%2250%22%20height%3D%2250%22%20fill%3D%22%23cccccc%22%3E%3C%2Frect%3E%3Cg%3E%3Ctext%20x%3D%226.2265625%22%20y%3D%2229.5328125%22%3E50x50%3C%2Ftext%3E%3C%2Fg%3E%3C%2Fg%3E%3C%2Fsvg%3E" data-holder-rendered="true" style="width: 50px; height: 50px;">
+            </div>
+          </div>
+          <div class="media-body">
+            <strong class="notification-title"><a href="#">Dave Lister</a> commented on <a href="#">DWARF-13 - Maintenance</a></strong>
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <h3 class="panel-title">
+                        <span class="glyphicon glyphicon-circle-arrow-right"></span>Where do you get your news?</h3>
+                </div>
+                <div class="panel-body two-col">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="well well-sm">
+                                <div class="checkbox">
+                                    <label>
+                                        <input type="checkbox" value="">
+                                        Internet
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="well well-sm">
+                                <div class="checkbox">
+                                    <label>
+                                        <input type="checkbox" value="">
+                                        Television
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="well well-sm margin-bottom-none">
+                                <div class="checkbox">
+                                    <label>
+                                        <input type="checkbox" value="">
+                                        Radio
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="well well-sm margin-bottom-none">
+                                <div class="checkbox">
+                                    <label>
+                                        <input type="checkbox" value="">
+                                        Newspaper
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel-footer">
+                    <button type="button" class="btn btn-success btn-sm">
+                        <span class="glyphicon glyphicon-ok"></span>Vote</button>
+                    <button type="button" class="btn btn-primary btn-sm">
+                        View Result</button>
+                </div>
+            </div>
+        </div>
+
+            <div class="notification-meta">
+              <small class="timestamp">27. 11. 2015, 15:00</small>
+            </div>
+          </div>
+        </div>
+    </li>
+
+    <li class="notification">
+        <div class="media">
+          <div class="media-left">
+            <div class="media-object">
+              <img data-src="holder.js/50x50?bg=cccccc" class="img-circle" alt="50x50" src="data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2250%22%20height%3D%2250%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2050%2050%22%20preserveAspectRatio%3D%22none%22%3E%3Cdefs%3E%3Cstyle%20type%3D%22text%2Fcss%22%3E%23holder_162c77887a1%20text%20%7B%20fill%3A%23919191%3Bfont-weight%3Abold%3Bfont-family%3AArial%2C%20Helvetica%2C%20Open%20Sans%2C%20sans-serif%2C%20monospace%3Bfont-size%3A10pt%20%7D%20%3C%2Fstyle%3E%3C%2Fdefs%3E%3Cg%20id%3D%22holder_162c77887a1%22%3E%3Crect%20width%3D%2250%22%20height%3D%2250%22%20fill%3D%22%23cccccc%22%3E%3C%2Frect%3E%3Cg%3E%3Ctext%20x%3D%226.2265625%22%20y%3D%2229.5328125%22%3E50x50%3C%2Ftext%3E%3C%2Fg%3E%3C%2Fg%3E%3C%2Fsvg%3E" data-holder-rendered="true" style="width: 50px; height: 50px;">
+            </div>
+          </div>
+          <div class="media-body">
+            <strong class="notification-title"><a href="#">Nikola Tesla</a> resolved <a href="#">T-14 - Awesome stuff</a></strong>
+
+            <div class="form-group">
+    <textarea class="form-control rounded-0" id="exampleFormControlTextarea1" rows="10"></textarea>
+</div>
+
+            <div class="notification-meta">
+              <small class="timestamp">27. 10. 2015, 08:00</small>
+            </div>
+
+          </div>
+        </div>
+    </li>
+
+    <li class="notification">
+        <div class="media">
+          <div class="media-left">
+            <div class="media-object">
+              <img data-src="holder.js/50x50?bg=cccccc" class="img-circle" alt="50x50" src="data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2250%22%20height%3D%2250%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2050%2050%22%20preserveAspectRatio%3D%22none%22%3E%3Cdefs%3E%3Cstyle%20type%3D%22text%2Fcss%22%3E%23holder_162c77887a2%20text%20%7B%20fill%3A%23919191%3Bfont-weight%3Abold%3Bfont-family%3AArial%2C%20Helvetica%2C%20Open%20Sans%2C%20sans-serif%2C%20monospace%3Bfont-size%3A10pt%20%7D%20%3C%2Fstyle%3E%3C%2Fdefs%3E%3Cg%20id%3D%22holder_162c77887a2%22%3E%3Crect%20width%3D%2250%22%20height%3D%2250%22%20fill%3D%22%23cccccc%22%3E%3C%2Frect%3E%3Cg%3E%3Ctext%20x%3D%226.2265625%22%20y%3D%2229.5328125%22%3E50x50%3C%2Ftext%3E%3C%2Fg%3E%3C%2Fg%3E%3C%2Fsvg%3E" data-holder-rendered="true" style="width: 50px; height: 50px;">
+            </div>
+          </div>
+          <div class="media-body">
+            <strong class="notification-title"><a href="#">James Bond</a> resolved <a href="#">B-007 - Desolve Spectre organization</a></strong>
+
+            <div class="notification-meta">
+              <small class="timestamp">1. 9. 2015, 08:00</small>
+            </div>
+
+          </div>
+        </div>
+    </li>
+  </ul>
+</div>
+
+
+
+        </div>
+    </div>
+
+    <!-- /#wrapper --> 
+    <!-- Bootstrap core JavaScript -->
+
+    <!-- end of stream page -->
+
+    <script>
+        function setAttribute() {
+            document.getElementsByName("searchInput").setAttribute("class", "democlass"); 
+            document.getElementsByName("searchButton").setAttribute();
+        }
+</script>
+
+
+
+</body>
+
+</html>

@@ -1,92 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
 
-{% for error in form.non_field_errors %}
-<p style="color: red">
-    {{ error }}
-</p>
-{% endfor %}
-    {% if tag == '1' %}
-        {{entry.username}}
-        </br></br>
-        <form method="post" enctype="multipart/form-data" action="/profile/{{user.username}}/">
-            <table>
-                <img src="/photo/{{ entry.username }}" width="200px">
-                {% for field in form.visible_fields %}
-                    <tr>
-                        <td>{{field.label_tag}}</td>
-                        <td>{{field}}</td>
-                        <td class="error">
-                            {% for error in field.errors %} {{error}} {% endfor %}
-                        </td>
-                    </tr>
-                {% endfor %}
-            </table>
-            {% for field in form.hidden_fields %}
-                {{field}} {{field.errors}}
-            {% endfor %}
-            {% csrf_token %}
-            <input type="submit" value="Update">
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Stream Page</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="../static/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+    <link href="../static/payfun/new.css" rel="stylesheet">
+
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <style>
+
+        #signIn {
+            margin-right: 10px;
+        }
+
+    </style>
+
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+
+    <script type="text/javascript">
+
+        // Load google charts
+        google.charts.load('current', {'packages':['corechart', 'timeline']});
+        google.charts.setOnLoadCallback(drawPieChart);
+        google.charts.setOnLoadCallback(drawTimeline);
+
+        // Draw the chart and set the chart values
+        function drawPieChart() {
+            var data = google.visualization.arrayToDataTable([
+                ['Task', 'Hours per Day'],
+                ['Failed projects', 8],
+                ['Aborted projects', 2],
+                ['Finished projects', 4],
+            ]);
+
+            // Optional; add a title and set the width and height of the chart
+            var options = {'title':'Project details', 'width':400, 'height':300, is3D: true,};
+
+            // Display the chart inside the <div> element with id="piechart"
+            var chart = new google.visualization.PieChart(document.getElementById('piechart'));
+            chart.draw(data, options);
+        }
+
+        function drawTimeline() {
+            var container = document.getElementById('timeline');
+            var chart = new google.visualization.Timeline(container);
+            var dataTable = new google.visualization.DataTable();
+
+            dataTable.addColumn({ type: 'string', id: 'President' });
+            dataTable.addColumn({ type: 'string', id: 'Name' });
+            dataTable.addColumn({ type: 'date', id: 'Start' });
+            dataTable.addColumn({ type: 'date', id: 'End' });
+            dataTable.addRows([
+                [ '1', 'Washington', new Date(1789, 3, 30), new Date(1797, 2, 4) ],
+                [ '2', 'Adams',      new Date(1797, 2, 4),  new Date(1801, 2, 4) ],
+                [ '3', 'Jefferson',  new Date(1801, 2, 4),  new Date(1809, 2, 4) ]]);
+            chart.draw(dataTable);
+        }
+
+    </script>
+
+</head>
+
+<body>
+
+
+    <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+      <a class="navbar-brand" href="#">PayFun</a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarCollapse">
+        <form class="form-inline mt-2 mt-md-0">
+          <input class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search" name="searchInput" style="margin-top: 5px;">
+          <button class="btn btn-primary" type="submit" name="searchButton" style="margin-top: 5px;"><span class="glyphicon glyphicon-search"></span></button>
         </form>
-        </br></br>
-        <div>
-            <b>You are following:</b>
-            </br>
+      </div>
 
+      <button class="btn" id="signIn">Sign in</button>
+      <button class="btn" id="signUp">Sign up</button>
+    </nav>
 
-            {% for followee in followees %}
-            <a href="/profile/{{followee.username}}"> {{followee.username}} </a>
-            <br>
-            {% endfor %}
+    <div class="container" id="main_block">
 
+        <div class="span3 well">
+        <center>
+            <img src="https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcRbezqZpEuwGSvitKy3wrwnth5kysKdRqBW54cAszm_wiutku3R" name="aboutme" width="140" height="140" border="0" class="img-circle"></a>
+            <h3 class="media-heading">Joe Sixpack <small>USA</small></h3>
+            <span><strong>Tag: </strong></span>
+            <span class="label label-warning">Writer</span>
+            <span class="label label-info">Sports lover</span>
+            <span class="label label-success">Explorer</span>
+            <br />
+            <i class="glyphicon glyphicon-envelope"></i>email@example.com
+            <h5>Credits: 10</h5>
+        </center>
+        <hr>
+        <div class="modal-body">
+            <center>
+                <p class="text-left"><h3><strong>Biography</strong></h3>
+                <br>
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut sem dui, tempor sit amet commodo a, vulputate vel tellus.</p>
+                <br>
+            </center>
+        </div>
+    </div>
+    <center>
+        <div id="piechart"></div>
+        <div id="timeline" style="height: 180px;"></div>
+    </center>
+
+    <br />
+    <br />
+    <br />
+
+    <h3>Projects</h3>
+    <hr>
+
+    <div class="row">
+
+        <div class="col-sm">
+            <div class="card text-white bg-dark mb-3" style="max-width: 40rem">
+                <img class="card-img-top" src="./images/cat.jpg" alt="Card image cap">
+                <div class="card-header">Streaking</div>
+                <div class="card-body">
+                    <h5 class="card-title">By: <a href="">Bo Jing</a> on 2/6/2018</h5>
+                    <p class="card-text">Location: Pittsburgh</p>
+                    <p class="card-text">I plan to go to streak to raise money for some adoptable cats</p>
+                    <a href="#" class="btn btn-primary">Know more</a>
+                    <a href="#" class="btn btn-warning">Abort</a>
+                </div>
+            </div>
 
         </div>
 
+        <div class="col-sm">
+
+            <div class="card text-white bg-dark mb-3" style="max-width: 40rem;">
+                <img class="card-img-top" src="./images/fence.jpg" alt="Card image cap">
+                <div class="card-header">Paint the fence</div>
+                <div class="card-body">
+                    <h5 class="card-title">By: <a href="">David</a> on 2/6/2018</h5>
+                    <p class="card-text">Location: Pittsburgh<p>
+                    <p class="card-text">I am going to pain the CMU fence at 3/30/2018 to celebrate the first week back from ....</p>
+                    <a href="#" class="btn btn-primary">Know more</a>
+                    <a href="#" class="btn btn-warning">Abort</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-sm">
+            <div class="card text-white bg-dark mb-3" style="max-width: 40rem;">
+                <img class="card-img-top" src="./images/carnival.jpg" alt="Card image cap">
+                <div class="card-header">Carnival Day!!!</div>
+                <div class="card-body">
+                    <h5 class="card-title">By: <a href="">Xuyu</a> on 2/6/2018</h5>
+                    <p class="card-text">Location: Pittsburgh<p>
+                    <p class="card-text">Let's donate to have a better carnival day!</p>
+                    <a href="#" class="btn btn-primary">Know more</a>
+                    <a href="#" class="btn btn-warning">Abort</a>
+                </div>
+            </div>
+        </div>
+    </div>
 
 
-    {% else %}
-        {% if followma == '1' %}
-            {{entry.username}}
-            </br></br>
-            <form method="post" action="/followUser/{{ entry.username }}">
-                <img src="/photo/{{ entry.username }}" width="200px">
-                <table>
-                    {% for field in form.visible_fields %}
-                    <tr>
-                        <td>{{field.label_tag}}</td>
-                        <td>{{field}}</td>
-                        <td class="error">
-                            {% for error in field.errors %} {{error}} {% endfor %}
-                        </td>
-                    </tr>
-                    {% endfor %}
-                </table>
-                {% for field in form.hidden_fields %}
-                {{field}} {{field.errors}}
-                {% endfor %}
-                {% csrf_token %}
-                    <input type="submit" value="Follow">
-            </form>
-        {% else %}
-            {{entry.username}}
-            </br></br>
-            <form method="post" action="/unfollowUser/{{entry.username}} ">
-                <img src="/photo/{{ entry.username }}" width="200px">
-                <table>
-                    {% for field in form.visible_fields %}
-                    <tr>
-                        <td>{{field.label_tag}}</td>
-                        <td>{{field}}</td>
-                        <td class="error">
-                            {% for error in field.errors %} {{error}} {% endfor %}
-                        </td>
-                    </tr>
-                    {% endfor %}
-                </table>
-                {% for field in form.hidden_fields %}
-                {{field}} {{field.errors}}
-                {% endfor %}
-                {% csrf_token %}
-                <input type="submit" value="Unfollow">
-            </form>
-        {% endif %}
-    {% endif %}
+</body>
 
+</html>

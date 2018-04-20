@@ -29,10 +29,11 @@ def tryLogin(request):
     if user is not None:
         login(request, user)
         context = {}
-        context['user'] = user
-        all_activities = Activity.objects.all()
-        context['activities'] = all_activities
-        return render(request, 'global.html', context)
+        #context['user'] = user
+        #all_activities = Activity.objects.all()
+        #context['activities'] = all_activities
+        #return render(request, 'global.html', context)
+        return redirect(reverse('stream'))
     else:
         # Return an 'invalid login' error message.
         return render(request, 'login.html')
@@ -260,7 +261,22 @@ def launch(request):
 def global_stream(request):
         # Gets a list of all the items in the todo-list database.
     all_activities = Activity.objects.all()
-    return render(request, 'index.html', {'activities': all_activities})
+
+    activity_groups = []
+    temp_group = []
+
+    for index, activity in enumerate(all_activities):
+        if index % 3 == 0 and len(temp_group) != 0:
+                activity_groups.append(temp_group)
+                temp_group = []
+                temp_group.append(activity)
+        else:
+            temp_group.append(activity)
+
+    activity_groups.append(temp_group)
+
+    # return render(request, 'index.html', {'activities': all_activities})
+    return render(request, 'global.html', {'activities': activity_groups})
 
 def activitydetail(request, activity_id):
     Entry_Activity = get_object_or_404(Activity,id = activity_id)
@@ -474,4 +490,23 @@ def searchActivity(request):
         activities = Activity.objects.all()
     else:
         activities = Activity.objects.filter(title = name)
-    return render(request, 'global.html', {'activities': activities})
+
+    activity_groups = []
+    temp_group = []
+
+    for index, activity in enumerate(activities):
+        if index % 3 == 0 and len(temp_group) != 0:
+            activity_groups.append(temp_group)
+            temp_group = []
+            temp_group.append(activity)
+        else:
+            temp_group.append(activity)
+
+    activity_groups.append(temp_group)
+
+    return render(request, 'global.html', {'activities': activity_groups})
+
+@login_required
+def notifications(request):
+    context = {}
+    return render(request, 'mailbox.html', context)
