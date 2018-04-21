@@ -510,3 +510,29 @@ def searchActivity(request):
 def notifications(request):
     context = {}
     return render(request, 'mailbox.html', context)
+
+@login_required
+def donations(request):
+    context = {}
+    return render(request, 'donations.html', context)
+
+@login_required
+def followings(request):
+    # change this later
+
+    activities = Activity.objects.all()
+
+    activity_groups = []
+    temp_group = []
+
+    for index, activity in enumerate(activities):
+        if index % 3 == 0 and len(temp_group) != 0:
+            activity_groups.append(temp_group)
+            temp_group = []
+            temp_group.append(activity)
+        else:
+            temp_group.append(activity)
+
+    activity_groups.append(temp_group)
+
+    return render(request, 'global.html', {'activities' : activity_groups})

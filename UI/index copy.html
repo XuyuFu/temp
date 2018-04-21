@@ -11,14 +11,14 @@
     <title>Stream Page</title>
 
     <!-- Bootstrap core CSS -->
-    <link href="../static/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
 
     <!-- Custom styles for this template -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
-    <link href="../static/payfun/new.css" rel="stylesheet">
+    <link href="./css/new.css" rel="stylesheet">
 
     <!-- Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -44,7 +44,7 @@
         }
 
         #About {
-            background: url("../static/images/icons/write.svg") no-repeat scroll center center / 100% auto rgba(0, 0, 0, 0);
+            background: url("./images/icons/write.svg") no-repeat scroll center center / 100% auto rgba(0, 0, 0, 0);
         }
 
         #signIn {
@@ -69,7 +69,7 @@
 
 
     <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
-      <a class="navbar-brand" href="{url 'stream'}">PayFun</a>
+      <a class="navbar-brand" href="#">PayFun</a>
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
@@ -88,41 +88,63 @@
     <div class="container" id="main_block">
 
         <div class="sidenav">
+            
 
             <div class="btn-group-vertical">
-                <a class='btn btn-light' href="{% url 'launCh' %}"><i class="fa fa-pencil-square-o"></i>Create</a>
-                <a class="btn btn-light" href="{% url 'donations' %}"><i class="fa fa-money"></i>Donations</a>
-                <a class="btn btn-light" href="{% url 'followings' %}"><i class="fa fa-star"></i>Followings</a>
-                <a class="btn btn-light" href="{% url 'profile' user.username %}"><i class="fa fa-user"></i></i>Profiles</a>
-                <a class="btn btn-light" href="{% url 'notifications' %}"><i class="fa fa-envelope-square"></i>Notifications</a>
+                <button class="btn"><i class="fa fa-pencil-square-o"></i></i>Create</button>
+                <button class="btn"><i class="fa fa-money"></i>Donations</button>
+                <button class="btn"><i class="fa fa-archive"></i>Projects</button>
+                <button class="btn"><i class="fa fa-star"></i>Followings</button>
+                <button class="btn"><i class="fa fa-user"></i></i>Profiles</button>
+                <button class="btn"><i class="fa fa-envelope-square"></i>Notifications</button>
             </div>
             
         </div>
 
         <div class="container">
 
-                {% for activity_group in activities %}
+            <div class="row">
 
-                    <div class="row">
-                        {% for activity in activity_group %}
-                            <div class="col-sm">
-                                <div class="card text-white bg-dark mb-3" style="max-width: 40rem">
-                                    <img class="card-img-top" src="{% url 'photo' activity.launcher.username %}" alt="Card image cap"/>
-                                    <div class="card-header">{{activity.title}}</div>
-                                    <div class="card-body">
-                                        <h5 class="card-title">By: <a href="">{{activity.launcher.username}}</a> on {{activity.post_time}}</h5>
-                                        <p class="card-text">Location: {{activity.location}}</p>
-                                        <p class="card-text">{{activity.content}}</p>
-                                        <a href="{% url 'profile' activity.launcher.username %}" class="btn btn-primary">Know more</a>
-                                    </div>
-                                </div>
-
-                            </div>
-                        {% endfor %}
-
+                <div class="col-sm">
+                    <div class="card text-white bg-dark mb-3" style="max-width: 40rem">
+                        <img class="card-img-top" src="./images/cat.jpg" alt="Card image cap">
+                        <div class="card-header">Streaking</div>
+                        <div class="card-body">
+                            <h5 class="card-title">By: <a href="">Bo Jing</a> on 2/6/2018</h5>
+                            <p class="card-text">Location: Pittsburgh</p>
+                            <p class="card-text">I plan to go to streak to raise money for some adoptable cats</p>
+                            <a href="#" class="btn btn-primary">Know more</a>
+                        </div>
                     </div>
 
-                {% endfor %}
+                </div>
+
+                <div class="col-sm">
+
+                    <div class="card text-white bg-dark mb-3" style="max-width: 40rem;">
+                        <img class="card-img-top" src="./images/fence.jpg" alt="Card image cap">
+                        <div class="card-header">Paint the fence</div>
+                        <div class="card-body">
+                            <h5 class="card-title">By: <a href="">David</a> on 2/6/2018</h5>
+                            <p class="card-text">Location: Pittsburgh<p>
+                            <p class="card-text">I am going to pain the CMU fence at 3/30/2018 to celebrate the first week back from ....</p>
+                            <a href="#" class="btn btn-primary">Know more</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-sm">
+                    <div class="card text-white bg-dark mb-3" style="max-width: 40rem;">
+                        <img class="card-img-top" src="./images/carnival.jpg" alt="Card image cap">
+                        <div class="card-header">Carnival Day!!!</div>
+                        <div class="card-body">
+                            <h5 class="card-title">By: <a href="">Xuyu</a> on 2/6/2018</h5>
+                            <p class="card-text">Location: Pittsburgh<p>
+                            <p class="card-text">Let's donate to have a better carnival day!</p>
+                            <a href="#" class="btn btn-primary">Know more</a>
+                        </div>
+                    </div>
+                </div>
 
 
             </div>

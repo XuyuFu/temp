@@ -41,5 +41,7 @@ urlpatterns = [
     url(r'^unfollowActivity/(?P<activity_id>\S+)$', views.unfollowActivity, name='unfollowActivity'),
     url(r'^searchActivity/$', views.searchActivity, name='searchActivity'),
     url(r'^notifications/$', views.notifications, name='notifications'),
+    url(r'^donations/$', views.donations, name='donations'),
+    url(r'^followings/$', views.followings, name='followings'),
     url(r'^.*$', RedirectView.as_view(pattern_name='login_page', permanent=False)),
 ]
