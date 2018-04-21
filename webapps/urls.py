@@ -34,14 +34,24 @@ urlpatterns = [
     url(r'^profile/(?P<user_name>\S+)/$', views.profile, name='profile'),
     url(r'^followUser/(?P<user_name>\S+)$', views.followUser, name='followUser'),
     url(r'^unfollowUser/(?P<user_name>\S+)$', views.unfollowUser, name='unfollowUser'),
-    url(r'^photo/(?P<user_name>\S+)$', views.get_photo, name='photo'),
-    url(r'^add-comment$', views.add_comment, name='add_comment'),
-    url(r'^add-progress', views.add_progress, name='add_progress'),
+    # url(r'^photo/(?P<user_name>\S+)$', views.get_photo, name='photo'),
+    url(r'^getPhoto/(?P<id>\d+)$', views.getPhoto, name='getPhoto'),
+    url(r'^add-comment$', views.add_comment, name='addcomment'),
+    url(r'^add-progress$', views.add_progress, name='addprogress'),
     url(r'^followActivity/(?P<activity_id>\S+)$', views.followActivity, name='followActivity'),
     url(r'^unfollowActivity/(?P<activity_id>\S+)$', views.unfollowActivity, name='unfollowActivity'),
     url(r'^searchActivity/$', views.searchActivity, name='searchActivity'),
     url(r'^notifications/$', views.notifications, name='notifications'),
+<<<<<<< HEAD
     url(r'^donations/$', views.donations, name='donations'),
     url(r'^followings/$', views.followings, name='followings'),
     url(r'^.*$', RedirectView.as_view(pattern_name='login_page', permanent=False)),
+=======
+    url(r'^get-post-comment$', views.get_post_comment),
+    url(r'^global-stream$', views.global_stream, name="global"),
+    url(r'^follow-stream$', views.follow_stream, name="follow"),
+    url(r'^launched-stream$', views.launched_stream, name="launched"),
+    url(r'^sponser-stream$', views.global_stream, name="global"),
+
+>>>>>>> a5c0d69db1574dfcba7229c9b1aaa0ae05f4efb8
 ]
