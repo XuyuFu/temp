@@ -1,99 +1,66 @@
+var lastUpdateTime = '1970-01-01 00:00:00.00';
+
 function addComment(activity_id) {
-    var itemTextElement = document.getElementById("comment-"+activity_id);
+    var itemTextElement = document.getElementById("comment-" + activity_id);
     console.log(itemTextElement);
-    var itemTextValue   = itemTextElement.value;
+    var curPage = window.location.href.split("/")[3];
+    console.log(curPage);
+    var itemTextValue = itemTextElement.value;
     console.log(itemTextValue);
     itemTextElement.value = '';
     displayError_comment('');
 
-
-    var req = new XMLHttpRequest();
-    req.onreadystatechange = function() {
-        if (req.readyState != 4) return;
-        if (req.status != 200) return;
-        var response = JSON.parse(req.responseText);
-        console.log( typeof (response));
-        console.log("return");
-        console.log(response);
-        var fix_response = response;
-        if (Array.isArray(fix_response)) {
-            console.log("is array");
-            updateCommentList(fix_response);
-            console.log("heiheihei");
-        } else {
-            console.log("is not array");
-            displayError_comment(fix_response.error);
-        }
+    if (itemTextValue != "") {
+        $.ajax({
+            url: "/add-comment",
+            type: "POST",
+            data: "comment=" + itemTextValue + "&activity_id=" + activity_id + "&last_update_time=" + lastUpdateTime + "&cur_page=" + curPage + "&csrfmiddlewaretoken=" + getCSRFToken(),
+            dataType: "json",
+            success: function (response) {
+                updateHelper(response);
+            }
+        });
     }
+}
 
-    req.open("POST", "/add-comment", true);
-    req.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-    req.send("comment="+itemTextValue+"&activity_id="+activity_id+"&csrfmiddlewaretoken="+getCSRFToken());
+function updateHelper(response) {
+    var comments = JSON.parse(response['comments'])
+    var progress = JSON.parse(response['progress'])
+    lastUpdateTime = response['last_update_time']
 
+    $(progress).each(function() {
+         var target = "#progress-list-" + this.post_id;
+         $(target).append(this.html);
+    });
+
+    $(comments).each(function() {
+        var target = "#comment-list-" + this.post_id;
+        $(target).append(this.html);
+    });
 }
 
 function addProgress(activity_id) {
     var itemTextElement = document.getElementById("progress-"+activity_id);
-    console.log(itemTextElement);
+    var curPage = window.location.href.split("/")[3];
     var itemTextValue   = itemTextElement.value;
-    console.log(itemTextValue);
     itemTextElement.value = '';
     displayError_progress('');
-
-
-    var req = new XMLHttpRequest();
-    req.onreadystatechange = function() {
-        if (req.readyState != 4) return;
-        if (req.status != 200) return;
-        var response = JSON.parse(req.responseText);
-        console.log( typeof (response));
-        console.log("return");
-        console.log(response);
-        var fix_response = response;
-        if (Array.isArray(fix_response)) {
-            console.log("is array");
-            updateProgressList(fix_response);
-            console.log("heihei");
-        } else {
-            console.log("is not array");
-            displayError_progress(fix_response.error);
-        }
+    if (itemTextValue != "") {
+        $.ajax({
+            url: "/add-progress",
+            type: "POST",
+            data: "progress=" + itemTextValue + "&activity_id=" + activity_id + "&last_update_time=" + lastUpdateTime + "&cur_page=" + curPage + "&csrfmiddlewaretoken=" + getCSRFToken(),
+            dataType: "json",
+            success: function (response) {
+                updateHelper(response);
+            }
+        });
     }
-    req.open("POST", "/add-progress", true);
-    req.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-    console.log("before hah");
-    req.send("progress="+itemTextValue+"&activity_id="+activity_id+"&csrfmiddlewaretoken="+getCSRFToken());
+
 
 }
 
 
-function updateCommentList(items) {
-    // Removes the old to-do list items
-
-    var post_id = items[0].post_id;
-    var list    = document.getElementById("comment-list-"+post_id);
-    while (list.hasChildNodes()) {
-        list.removeChild(list.firstChild);
-    }
-
-    for(var i=0; i<items.length;i++)
-    {
-        console.log(items[i]);
-        var post_id = items[i].post_id;
-        console.log(post_id);
-        var content = items[i].html;
-        console.log(content);
-        console.log(typeof (content));
-        var list    = document.getElementById("comment-list-"+post_id);
-        var newComment = document.createElement("li");
-        newComment.innerHTML=content;
-        console.log(post_id);
-        console.log(content);
-        if(list == null)
-            continue;
-        list.appendChild(newComment);
-    }
-}
 
 function updateProgressList(items) {
     // Removes the old to-do list items
@@ -147,3 +114,29 @@ function getCSRFToken() {
     }
     return "unknown";
 }
+
+function getProgressComment() {
+    var tmp = window.location.href.split("/");
+    console.log(tmp);
+    console.log(tmp);
+    console.log(tmp);
+    console.log(tmp);
+    var curPage = window.location.href.split("/")[3];
+    var id = "0";
+    if(window.location.href.split("/").length>4)
+        id = window.location.href.split("/")[4];
+        console.log(id);
+        console.log(id);
+        console.log(id);
+        console.log(id);
+
+    $.ajax({
+        url: "/get-post-comment",
+        dataType: "json",
+        data: "last_update_time="+lastUpdateTime+"&cur_page=" + curPage + "&activity_id="+ id + "&csrfmiddlewaretoken=" + getCSRFToken(),
+        success: updateHelper
+    });
+}
+
+window.onload = getProgressComment;
+// window.setInterval(getProgressComment, 5000);

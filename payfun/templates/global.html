@@ -103,26 +103,23 @@
         <div class="container">
 
                 {% for activity_group in activities %}
-
                     <div class="row">
                         {% for activity in activity_group %}
                             <div class="col-sm">
                                 <div class="card text-white bg-dark mb-3" style="max-width: 40rem">
-                                    <img class="card-img-top" src="{% url 'photo' activity.launcher.username %}" alt="Card image cap"/>
+                                    <img title="profile image" class="img-circle img-responsive profile-img" src="{% url 'getPhoto' activity.id %}" height="180px" width="180px" align="middle"/>
                                     <div class="card-header">{{activity.title}}</div>
                                     <div class="card-body">
                                         <h5 class="card-title">By: <a href="">{{activity.launcher.username}}</a> on {{activity.post_time}}</h5>
                                         <p class="card-text">Location: {{activity.location}}</p>
                                         <p class="card-text">{{activity.content}}</p>
+                                        <a href="/activitydetail/{{activity.id }}">Details</a>
                                         <a href="{% url 'profile' activity.launcher.username %}" class="btn btn-primary">Know more</a>
                                     </div>
                                 </div>
-
                             </div>
                         {% endfor %}
-
                     </div>
-
                 {% endfor %}
 
 
