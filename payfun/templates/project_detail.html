@@ -13,7 +13,7 @@
 
 
     <!-- Bootstrap core CSS -->
-    <link href="../static/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="../../static/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
 
     <!-- Custom styles for this template -->
     <!-- Custom styles for this template -->
@@ -27,6 +27,46 @@
     <script src="../static/vendor/jquery/jquery.min.js"></script>
     <script src="../static/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 
+    <style>
+        .mainBlock {
+            margin-left: 140px; /* Same width as the sidebar + left position in px */
+            font-size: 28px; /* Increased text to enable scrolling */
+            padding: 0px 10px;
+        }
+
+        .sidenav {
+            width: 160px; /* Set the width of the sidebar */
+            position: fixed; /* Fixed Sidebar (stay in place on scroll) */
+            z-index: 1; /* Stay on top */
+            left: 0;
+            overflow-x: hidden; /* Disable horizontal scroll */
+            padding: 6px 8px 6px 16px;
+        }
+
+        .list-group-item {
+            border-style: none;
+        }
+
+        #About {
+            background: url("../static/images/icons/write.svg") no-repeat scroll center center / 100% auto rgba(0, 0, 0, 0);
+        }
+
+        #signIn {
+            margin-right: 10px;
+        }
+
+        li {
+            margin-top: 0px;
+            margin-bottom: 0px;
+        }
+
+        hr {
+            margin-top: 0px;
+            margin-bottom: 0px;
+        }
+
+    </style>
+
 
 </head>
 
@@ -34,95 +74,144 @@
 
     <div id="wrapper">
 
-        <!-- Sidebar -->
-        <div id="sidebar-wrapper">
-            <ul class="sidebar-nav">
-                <li class="sidebar-brand">
-                    <a href="#">
-                        Welcome!
-                    </a>
-                </li>
-                <hr>
-                <li>
-                    <a href="#">Setting</a>
-                </li>
-                <li>
-                    <a href="#">Followed</a>
-                </li>
-                <li>
-                    <a href="#">Sponsored</a>
-                </li>
-                <li>
-                    <a href="#">Launched</a>
-                </li>
-                <li>
-                    <a href="#">Payment</a>
-                </li>
-                <li>
-                    <a href="#">Notifications</a>
-                </li>
-            </ul>
-        </div>
-        <!-- /#sidebar-wrapper -->
-
-        <!-- Page Content -->
-        <div id="page-content-wrapper">
-            <div class="container-fluid">
-                <nav class="navbar navbar-inverse">
-                  <div class="container-fluid">
-                    <div class="navbar-header">
-                      <a class="navbar-brand" href="#menu-toggle" class="btn btn-secondary" id="menu-toggle" height="42" width="42">PayFun</a>
-                    </div>
-                    <a href="/global-stream">Home</a>
-                    <li><a href="#"><span class="glyphicon glyphicon-user"></span> Log out</a></li>
-                  </div>
-                </nav>
+        <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+            <a class="navbar-brand" href="{url 'stream'}">PayFun</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarCollapse">
+                <form class="form-inline mt-2 mt-md-0" method="post" action="/searchActivity/">
+                    <input class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search" name="searchInput" style="margin-top: 5px;">
+                    <button class="btn btn-primary" type="submit" name="searchButton" style="margin-top: 5px;"><span class="glyphicon glyphicon-search"></span></button>
+                    {% csrf_token %}
+                </form>
             </div>
-        </div>
-  <!-- /#page-content-wrapper -->
+
+            <button class="btn" id="signIn">Sign in</button>
+            <button class="btn" id="signUp">Sign up</button>
+        </nav>
 
         <div class="container" id="main_block">
+
+            <div class="sidenav">
+
+                <div class="btn-group-vertical">
+                    <a class='btn btn-light' href="{% url 'launCh' %}"><i class="fa fa-pencil-square-o"></i>Create</a>
+                    <a class="btn btn-light" href="{% url 'donations' %}"><i class="fa fa-money"></i>Donations</a>
+                    <a class="btn btn-light" href="{% url 'followings' %}"><i class="fa fa-star"></i>Followings</a>
+                    <a class="btn btn-light" href="{% url 'profile' user.username %}"><i class="fa fa-user"></i></i>Profiles</a>
+                    <a class="btn btn-light" href="{% url 'notifications' %}"><i class="fa fa-envelope-square"></i>Notifications</a>
+                </div>
+
+            </div>
 
             <div class="jumbotron">
                 <div class="comment">
 
                     <h1>{{activity.title}}</h1>
-                    <div>
-                        <p style="float: left;">
-                            <img title="profile image" class="img-circle img-responsive profile-img" src="{% url 'getPhoto' activity.id %}" height="180px" width="180px" align="middle"/>
-                        </p>
-                        <br>
-                        <br>
-                        <h3>Posted by: <a href="/profile/{{activity.launcher.username}}">{{activity.launcher.username}}</a></h3>
-                        <h3>on {{activity.post_time}}</h3>
-                        <br>
-                        <br>
-                        <br>
+                    <div class="row">
+                        <div class="col-sm">
+                            <p style="float: left;">
+                                <!-- img title="profile image" class="img-circle img-responsive profile-img" src="{% url 'getPhoto' activity.id %}" height="180px" width="180px" align="middle"/-->
+                                <img title="profile image" class="img-circle img-responsive profile-img" src="{% url 'getPhoto' activity.id %}" height="180px" width="180px" align="middle">
+                            </p>
+                            <br/>
+                            <br/>
+                            <h4>Posted by: <a href="/profile/{{activity.launcher.username}}">{{activity.launcher.username}}</a></h4>
+                            <h4>on {{activity.post_time}}</h4>
+                        </div>
+                        <div class="col-sm">
+                            <input id="amount" name="amount" type="text" value="0"/>
+                            <div id="paypal-button-container"></div>
+                            <input type="image" src="https://www.paypalobjects.com/webstatic/en_US/i/btn/png/btn_addtocart_120x26.png" alt="Add to Cart" name="submit">
+                            <img alt="" src="https://www.paypalobjects.com/en_US/i/scr/pixel.gif" width="1" height="1">
+                            <div class="row">
+                                <div class="col-sm">
+                                    <div>
+                                        <form method="post" action="{% url 'pay' activity.id %}" id="donate-{{ activity.id }}">
+                                            {% csrf_token %}
+                                            {{ form }}
+                                            <input type="submit" class="btn" value="donate" id="donate_amount"/>
+                                        </form>
+                                    </div>
+                                </div>
+
+                                <div class="col-sm">
+                                    <div>
+                                        <form method="post" action="{% url 'refund' activity.id %}" id="refund-{{ activity.id }}">
+                                            {% csrf_token %}
+                                            <!-- What is the form here? -->
+                                            {{ form }}
+                                            <input type="submit" class="btn" value="refund"/>
+                                        </form>
+                                    </div>
+                                </div>
+
+                                <script>
+        paypal.Button.render({
+           env: 'sandbox', // sandbox | production
+            // PayPal Client IDs - replace with your own
+            // Create a PayPal app: https://developer.paypal.com/developer/applications/create
+            client: {
+                sandbox:    'AXXyS4oWEGmGgsZDp5IFJqse17JG4gh0LTy6Ab2qLdJrl8IL5mXQ64S1BXm4GDMeQJNatWv-amMpoL0I',
+                production: 'fuxuyu@outlook.com'
+            },
+            // Show the buyer a 'Pay Now' button in the checkout flow
+            commit: true,
+            // payment() is called when the button is clicked
+            payment: function(data, actions) {
+                var amount = document.getElementById("amount");
+                // Make a call to the REST api to create the payment
+                return actions.payment.create({
+                    payment: {
+                        transactions: [
+                            {
+                                amount: { total: amount.value, currency: 'USD' }
+                            }
+                        ]
+                    }
+                });
+            },
+            // onAuthorize() is called when the buyer approves the payment
+            onAuthorize: function(data, actions) {
+                // Make a call to the REST api to execute the payment
+                return actions.payment.execute().then(function() {
+                     window.alert('Payment Complete!');
+                });
+            }
+        }, '#paypal-button-container');
+    </script>
+                            </div>
+
+                            <input type="image" src="https://www.paypalobjects.com/en_US/i/btn/btn_buynowCC_LG.gif" border="0" name="submit" alt="PayPal - The safer, easier way to pay online!">
+                            <img alt="" border="0" src="https://www.paypalobjects.com/en_US/i/scr/pixel.gif" width="1" height="1">
+                        </div>
                     </div>
 
-                    <h3>Location: {{activity.location}}</h3>
-                    <p>{{activity.content}}</p>
-
-                    <h7>Target amount: ${{activity.target_money}}</h7>
-
-                    <h7>Follower: 10 Donator: 2</h7>
-                     {% if my_activity == '0' %}
+                    {% if my_activity == '0' %}
                          {% if activity_followed == '0' %}
                                 <form method="post" action="/followActivity/{{activity.id}} ">
-                                    <input type="submit" value="follow">
+                                    <input type="submit" class="btn btn-success" value="follow">
                                 {% csrf_token %}
                                 </form>
                          {% endif %}
 
                          {% if activity_followed == '1' %}
                                    <form method="post" action="/unfollowActivity/{{activity.id}} ">
-                                    <input type="submit" value="unfollow">
+                                    <input type="submit" class="btn btn-danger" value="unfollow">
                                     {% csrf_token %}
                                 </form>
 
                          {% endif %}
 
-                {% endif %}
+                    {% endif %}
+
+                    <h3>Location: {{activity.location}}</h3>
+                    <p>{{activity.content}}</p>
+
+                    <h7>Target amount: ${{activity.target_money}}</h7>
+                    <h7>Follower: 10 Donator: 2</h7>
+                    <span style="width: 100px"></span>
 
                 </div>
 
@@ -140,6 +229,16 @@
                     <button type="submit" class="btn btn-primary"  onclick='addProgress({{ activity.id }})'>Update Progress</button>
                     <span id="error-progress" class="error"></span>
                 {% endif %}
+                <div class="card my-4 comment_input">
+                    <h5 class="card-header">Publish progress:</h5>
+                    <div class="card-body">
+                            <div class="form-group">
+                                <input class="form-control" rows="1", name="comment-{{activity.id}}" id="comment-{{activity.id}}">
+                            </div>
+                            <button type="submit" class="btn btn-primary"  onclick='addComment({{ activity.id }})'>Submit</button>
+                            <span id="error-comment" class="error"></span>
+                    </div>
+                </div>
 
 
             </div>

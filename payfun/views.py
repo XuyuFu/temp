@@ -11,13 +11,18 @@ from django.http import HttpResponse, Http404
 from django.contrib.auth.decorators import login_required
 from django.db import transaction
 from payfun.models import Followed, Activity, Comment, Progress
-from payfun.models import Profile
+from payfun.models import Profile, SponserAndActivity
 from payfun.forms import LaunchForm, ProfileForm, EditForm, ProgressForm
+from .payment import payment
+from .paydetails import paydetails
 import pytz
 import json
 from django.utils import timezone
 from django.template.loader import render_to_string
 from datetime import datetime
+import requests
+import collections
+from googleplaces import GooglePlaces, types, lang
 
 
 def login_page(request):
@@ -533,16 +538,11 @@ def get_post_comment(request):
     response_data = get_update_data(time_str, timezone.localtime(timezone.now()), cur_page, activity_id)
     return HttpResponse(response_data, content_type='application/json')
 
-
-
-
-
 @login_required
 def notifications(request):
     context = {}
     return render(request, 'mailbox.html', context)
 
-<<<<<<< HEAD
 @login_required
 def donations(request):
     context = {}
@@ -568,7 +568,77 @@ def followings(request):
     activity_groups.append(temp_group)
 
     return render(request, 'global.html', {'activities' : activity_groups})
-=======
 
+@login_required
+def pay(request, activity_id):
+    recipient_email = "fuxuyu-facilitator@outlook.com"
+    # recipient_email = "fuxuyu-organizer@outlook.com"
+    dollars = "1"
 
->>>>>>> a5c0d69db1574dfcba7229c9b1aaa0ae05f4efb8
+    sponsor = request.user
+    # activity = Activity.objects.filter(id=activity_id)
+    activity = Activity.objects.get(id=activity_id)
+    redirect_address, pay_key = payment(recipient_email, dollars)
+    transaction = SponserAndActivity(sponsor=sponsor, activity=activity, money_amount=dollars, pay_key=pay_key)
+    transaction.save()
+    return redirect(redirect_address)
+
+def transfer(request, dollars, recipient_email):
+    # is there a problem? I think the dollars should be retrieved from the request parameters
+
+    # Get the paypal redirect address from payment.py:
+    redirect_address, pay_key = transfer(recipient_email, dollars)
+
+    return redirect(redirect_address)
+    # payment(recipient_email, dollars)
+    # return render(request, "paybutton.html")
+
+# def refund(reuqest):
+#     recipient_email = "fuxuyu-buyer@outlook.com"
+#     dollars = "10"
+#     redirect_address = payment(recipient_email, dollars)
+#     return redirect(redirect_address)
+
+@login_required
+def refund(request):
+
+    # get the paykey and user from the corresponding database tables
+    # how to get the sponser
+    sponser = request.user
+    transaction = SponserAndActivity.objects.filter(sponsor=sponser)
+    payKey = transaction.pay_key
+    info = paydetails(payKey)
+    email = info[1]
+    dollars = info[2]
+    redirect_address = payment(email, dollars)
+    return redirect(redirect_address)
+
+@login_required()
+def payhome(request):
+    return render(request, "paybutton.html")
+
+@login_required
+def searchLocation(request):
+    context = {}
+    if 'query' in request.GET:
+        YOUR_API_KEY = 'AIzaSyDZn-uP8j6Z3ugZTOVheG82DIGQTANS93U'
+        google_places = GooglePlaces(YOUR_API_KEY)
+        query_result = google_places.text_search(query=request.GET['query'], language=lang.ENGLISH,
+            lat_lng=None, radius=3200,type=None, types=[], location=None, pagetoken=None)
+        locations = []
+        for place in query_result.places:
+            one = {}
+            one['name'] = place.name
+            one['id'] = place.place_id
+            place.get_details()
+            one['address'] = place.formatted_address
+            locations.append(one)
+        context['locations'] = locations
+        return render(request, 'create_project.html', context)
+    if 'choice' in request.POST:
+        context['link'] = "https://www.google.com/maps/search/?api=1&query=any" + "&query_place_id=" + request.POST['choice-id']
+        context['place_name'] = request.POST['choice']
+        # store the location and the location id
+        return render(request, 'location.html', context)
+    else:
+        return render(request, 'location.html', context)

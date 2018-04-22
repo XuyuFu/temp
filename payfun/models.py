@@ -25,6 +25,7 @@ class Activity(models.Model):
 	end_time = models.DateTimeField()
 	post_time = models.DateTimeField(auto_now_add=True)
 	location = models.CharField(max_length=100)
+	location_id = models.CharField(max_length=100)
 	is_start = models.BooleanField() # whether the activity has started
 	is_end = models.BooleanField() # whether the activity has failed, whether success or failure
 	is_success = models.BooleanField(blank=True)
@@ -38,7 +39,8 @@ class SponserAndActivity(models.Model):
 	activity = models.ForeignKey(Activity, on_delete=models.CASCADE)
 	time = models.DateTimeField(auto_now_add=True)
 	money_amount = models.FloatField()
-	is_anonymous = models.BooleanField()
+	# the pay key is used for refund
+	pay_key = models.CharField(max_length=50)
 
 class Followed(models.Model):
  	user = models.ForeignKey(User, on_delete=models.CASCADE)

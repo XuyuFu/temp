@@ -42,16 +42,17 @@ urlpatterns = [
     url(r'^unfollowActivity/(?P<activity_id>\S+)$', views.unfollowActivity, name='unfollowActivity'),
     url(r'^searchActivity/$', views.searchActivity, name='searchActivity'),
     url(r'^notifications/$', views.notifications, name='notifications'),
-<<<<<<< HEAD
     url(r'^donations/$', views.donations, name='donations'),
     url(r'^followings/$', views.followings, name='followings'),
-    url(r'^.*$', RedirectView.as_view(pattern_name='login_page', permanent=False)),
-=======
     url(r'^get-post-comment$', views.get_post_comment),
     url(r'^global-stream$', views.global_stream, name="global"),
     url(r'^follow-stream$', views.follow_stream, name="follow"),
     url(r'^launched-stream$', views.launched_stream, name="launched"),
     url(r'^sponser-stream$', views.global_stream, name="global"),
-
->>>>>>> a5c0d69db1574dfcba7229c9b1aaa0ae05f4efb8
+    url(r'^transfer/', views.transfer, name="transfer"),
+    url(r'^refund/(?P<activity_id>\S+)$', views.refund, name="refund"), # is there a problem here?
+    url(r'^pay/(?P<activity_id>\S+)$', views.pay, name="pay"),
+    url(r'^payhome$', views.payhome, name="payHome"),
+    url(r'^searchLocation/', views.searchLocation, name="searchLocation"),
+    # url(r'^.*$', RedirectView.as_view(pattern_name='login_page', permanent=False)),
 ]
