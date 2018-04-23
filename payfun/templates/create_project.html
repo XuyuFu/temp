@@ -10,7 +10,7 @@
 
     <title>Stream Page</title>
 
-    <script src="../js/payfun/location.js"  type="text/javascript"></script>
+    <script src="../static/js/payfun/location.js"  type="text/javascript"></script>
 
     <!-- Bootstrap core CSS -->
     <link href="../static/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
@@ -125,6 +125,7 @@
                             </span>
 
                             <div>
+
                                 <div>
                                     <form action="{% url 'searchLocation' %}" method="get">
                                         <input id="query" name="query" type="text" value="Please Input the Location Here!"/>
@@ -135,25 +136,23 @@
 
                                 <div class="locations">
                                     {% for l in locations %}
-                                        <button class="location" type="button" onclick="setLocation({{l.name}})">{{l.name}}</button>
-                                        <font>{{l.geo_location}} {l.place_id}}</font>
+                                        <button class="location" type="button" onclick="setLocation('{{l.name}}', '{{l.id}}')">{{l.name}}</button>
+                                        <font>{{l.address}}</font>
                                     {% endfor %}
                                 </div>
 
                                 <div>
                                     <form action="{% url 'searchLocation' %}" method="post">
-                                        <input id="choice" name="choice" type="hidden" value=""/>
-                                        <input id="choice-id" name="choice-id" type="hidden"/>
-                                        <input id="choice-geo" name="choice-geo" type="hidden"/>
+                                        <input id="choice" name="choice" type="text"/>
+                                        <input id="choice-id" name="choice-id" type="text"/>
                                         <input id="record" name="record" type="submit" value="Submit"/>
                                         {% csrf_token %}
                                     </form>
                                 </div>
 
-
                                 {% if link %}
                                     <div>
-                                        <a href={{link}}>pittsburgh</a>
+                                        <a href={{link}}>{{place_name}}</a>
                                     </div>
                                 {% endif %}
 
@@ -180,7 +179,8 @@
                                 </div>
 
                                 <div class="wrap-input100 validate-input" data-validate = "Username is required">
-                                    <input class="input100" type="text" name="location" >
+                                    <input class="input100" type="text" name="location" id="location"/>
+                                    <input type="hidden" name="location_id" id="location_id" />
                                     <span class="focus-input100"></span>
                                 </div>
 

@@ -22,6 +22,10 @@ from django.template.loader import render_to_string
 from datetime import datetime
 import requests
 import collections
+from nltk.tokenize import word_tokenize
+from collections import Counter
+import string
+
 from googleplaces import GooglePlaces, types, lang
 
 
@@ -179,10 +183,11 @@ def launch(request):
     user = request.user
     user_type = type(user)
     lauched_activity = Activity(content = request.POST.get('description'),location = request.POST.get('location'),
-                                target_money = request.POST.get('target_money'),picture = request.FILES['image'],
-                                title = request.POST.get('title'),launcher = request.user, post_time=timezone.now(),
-                                start_time= timezone.now(),end_time= timezone.now(),is_end = False, is_success = False,
-                                is_start = False)
+                                location_id=request.POST.get('location_id'), target_money=request.POST.get('target_money'),
+                                picture=request.FILES['image'],title=request.POST.get('title'),launcher=request.user,
+                                post_time=timezone.now(),start_time=timezone.now(),end_time= timezone.now(),is_end=False,
+                                is_success=False, is_start=False)
+
     # launch_form_final = LaunchForm(request.POST, request.FILES)
     # if not launch_form_final.is_valid():
     #     print("1")
@@ -453,14 +458,13 @@ def unfollowActivity(request, activity_id):
 
 @login_required
 def searchActivity(request):
-    name = request.POST.get('searchInput')
-    if name == '':
-        activities = Activity.objects.all()
-    else:
-        activities = Activity.objects.filter(title = name)
+    query = request.POST.get('searchInput')
+    activities = Activity.objects.all()
 
     activity_groups = []
     temp_group = []
+
+    activities = sortActivities(activities, query)
 
     for index, activity in enumerate(activities):
         if index % 3 == 0 and len(temp_group) != 0:
@@ -473,7 +477,43 @@ def searchActivity(request):
     activity_groups.append(temp_group)
     return render(request, 'global.html', {'activities': activity_groups})
 
+# rank all the activities
+def sortActivities(activities, query):
+    punctuations = list(string.punctuation)
+    terms = word_tokenize(query)
+    terms = [term for term in terms if term not in punctuations]
+    content_weight = 0.5
+    title_weight = 0.3
+    author_weight = 0.2
 
+    temp = []
+    for activity in activities:
+        score = 0
+        for term in terms:
+            content_score = getOccurences(activity.content, term) * content_weight
+            title_score = getOccurences(activity.title, term) * title_weight
+            author_score = getOccurences(activity.launcher.username, term) * author_weight
+            score += content_score + title_score + author_score
+        temp.append((activity, score))
+
+    result = sorted(temp, key=lambda tup: tup[1], reverse=True)
+    activities = []
+    for tuple in result:
+        activities.append(tuple[0])
+
+    return activities
+
+# get the occurences of a word in a string
+def getOccurences(string, term):
+    tokens = word_tokenize(string)
+    cnt = Counter()
+    for token in tokens:
+        cnt[token] += 1
+
+    if term in cnt:
+        return cnt[term]
+    else:
+        return 0
 
 
 
@@ -638,7 +678,7 @@ def searchLocation(request):
     if 'choice' in request.POST:
         context['link'] = "https://www.google.com/maps/search/?api=1&query=any" + "&query_place_id=" + request.POST['choice-id']
         context['place_name'] = request.POST['choice']
-        # store the location and the location id
-        return render(request, 'location.html', context)
+
+        return render(request, 'create_project.html', context)
     else:
-        return render(request, 'location.html', context)
+        return render(request, 'create_project.html', context)

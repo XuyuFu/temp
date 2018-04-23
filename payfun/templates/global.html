@@ -110,7 +110,7 @@
                                     <div class="card-header">{{activity.title}}</div>
                                     <div class="card-body">
                                         <h5 class="card-title">By: <a href="">{{activity.launcher.username}}</a> on {{activity.post_time}}</h5>
-                                        <p class="card-text">Location: {{activity.location}}</p>
+                                        <p class="card-text">Location: <a href="https://www.google.com/maps/search/?api=1&query=any&query_place_id={{ activity.location_id }}">{{activity.location}}</a></p>
                                         <p class="card-text">{{activity.content}}</p>
                                         <a href="/activitydetail/{{activity.id }}">Details</a>
                                         <a href="{% url 'profile' activity.launcher.username %}" class="btn btn-primary">Know more</a>
