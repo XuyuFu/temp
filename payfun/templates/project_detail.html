@@ -87,8 +87,7 @@
                 </form>
             </div>
 
-            <button class="btn" id="signIn">Sign in</button>
-            <button class="btn" id="signUp">Sign up</button>
+            <a href="/global-stream">Home</a>
         </nav>
 
         <div class="container" id="main_block">
@@ -100,7 +99,7 @@
                     <a class="btn btn-light" href="{% url 'donations' %}"><i class="fa fa-money"></i>Donations</a>
                     <a class="btn btn-light" href="{% url 'followings' %}"><i class="fa fa-star"></i>Followings</a>
                     <a class="btn btn-light" href="{% url 'profile' user.username %}"><i class="fa fa-user"></i></i>Profiles</a>
-                    <a class="btn btn-light" href="{% url 'notifications' %}"><i class="fa fa-envelope-square"></i>Notifications</a>
+                     <a class="btn btn-light" href="/notifications"><i class="fa fa-envelope-square"></i>Notifications</a>
                 </div>
 
             </div>
@@ -229,19 +228,7 @@
                     <button type="submit" class="btn btn-primary"  onclick='addProgress({{ activity.id }})'>Update Progress</button>
                     <span id="error-progress" class="error"></span>
                 {% endif %}
-                <div class="card my-4 comment_input">
-                    <h5 class="card-header">Publish progress:</h5>
-                    <div class="card-body">
-                            <div class="form-group">
-                                <input class="form-control" rows="1", name="comment-{{activity.id}}" id="comment-{{activity.id}}">
-                            </div>
-                            <button type="submit" class="btn btn-primary"  onclick='addComment({{ activity.id }})'>Submit</button>
-                            <span id="error-comment" class="error"></span>
-                    </div>
-                </div>
 
-
-            </div>
 
             <div class="jumbotron">
                 <div class="card my-4 comment_input">

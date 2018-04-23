@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'social_django',
     'payfun',
 ]
 
@@ -49,6 +50,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'social_django.middleware.SocialAuthExceptionMiddleware',
 ]
 
 ROOT_URLCONF = 'webapps.urls'
@@ -67,10 +69,20 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'social_django.context_processors.backends',
+                'social_django.context_processors.login_redirect',
             ],
         },
     },
 ]
+
+AUTHENTICATION_BACKENDS = (
+    'social_core.backends.github.GithubOAuth2',
+    'social_core.backends.twitter.TwitterOAuth',
+    'social_core.backends.facebook.FacebookOAuth2',
+
+    'django.contrib.auth.backends.ModelBackend',
+)
 
 WSGI_APPLICATION = 'webapps.wsgi.application'
 
@@ -139,3 +151,9 @@ print('Email host:port = {host}:{port}, user={user}'.format(
 MEDIA_ROOT = os.path.join(BASE_DIR, 'images/')
 
 STATIC_URL = '/static/'
+
+SOCIAL_AUTH_GITHUB_KEY = '97dc5c042bcb8afc2050'
+SOCIAL_AUTH_GITHUB_SECRET = 'd3d561f4c20b55a1f1d22290cf630876816e7a27'
+
+SOCIAL_AUTH_TWITTER_KEY = 'THuBfvnjolr3d48lzNaPKj5VS'
+SOCIAL_AUTH_TWITTER_SECRET = 'QQNjdkn6BMuh3QVU24vj6tKlkNzGZHdPSbevpnzvGb1giHLona'

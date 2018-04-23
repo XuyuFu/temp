@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns="http://www.w3.org/1999/html">
 
 <head>
 
@@ -9,7 +9,6 @@
     <meta name="author" content="">
 
     <title>Stream Page</title>
-
     <!-- Bootstrap core CSS -->
     <link href="../static/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
 
@@ -81,10 +80,15 @@
         </form>
       </div>
 
-          <form method="post" action="/logout/">
-                                    <input type="submit" value="logout">
-                                {% csrf_token %}
-                                </form>
+
+
+
+
+
+
+
+
+ <a href="/global-stream">Home</a>
     </nav>
 
     <div class="container" id="main_block">
@@ -93,37 +97,27 @@
 
             <div class="btn-group-vertical">
                 <a class='btn btn-light' href="{% url 'launCh' %}"><i class="fa fa-pencil-square-o"></i>Create</a>
-                <a class="btn btn-light" href="{% url 'donations' %}"><i class="fa fa-money"></i>Donations</a>
-                <a class="btn btn-light" href="{% url 'followings' %}"><i class="fa fa-star"></i>Followings</a>
+                <a class="btn btn-light" href="#"><i class="fa fa-money"></i>Donations</a>
+                <a class="btn btn-light" href="#"><i class="fa fa-archive"></i>Projects</a>
+                <a class="btn btn-light" href="#"><i class="fa fa-star"></i>Followings</a>
                 <a class="btn btn-light" href="{% url 'profile' user.username %}"><i class="fa fa-user"></i></i>Profiles</a>
                 <a class="btn btn-light" href="/notifications"><i class="fa fa-envelope-square"></i>Notifications</a>
-                {% if has_unread == True %}
-                    asdasdasdasdasdsadasd
-                {% endif %}
             </div>
-            
+
         </div>
 
         <div class="container">
 
-                {% for activity_group in activities %}
-                    <div class="row">
-                        {% for activity in activity_group %}
-                            <div class="col-sm">
-                                <div class="card text-white bg-dark mb-3" style="max-width: 40rem">
-                                    <img title="profile image" class="img-circle img-responsive profile-img" src="{% url 'getPhoto' activity.id %}" height="180px" width="180px" align="middle"/>
-                                    <div class="card-header">{{activity.title}}</div>
-                                    <div class="card-body">
-                                        <h5 class="card-title">By: <a href="">{{activity.launcher.username}}</a> on {{activity.post_time}}</h5>
-                                        <p class="card-text">Location: <a href="https://www.google.com/maps/search/?api=1&query=any&query_place_id={{ activity.location_id }}">{{activity.location}}</a></p>
-                                        <p class="card-text">{{activity.content}}</p>
-                                        <a href="/activitydetail/{{activity.id }}">Details</a>
-                                        <a href="{% url 'profile' activity.launcher.username %}" class="btn btn-primary">Know more</a>
-                                    </div>
-                                </div>
-                            </div>
-                        {% endfor %}
+                {% for notification in notifications %}
+
+                    <div>
+                        <p>  Activity <a href="/activitydetail/{{notification.activity.id }}">{{ notification.activity.title }}</a>  has a new update at {{ notification.time }}.
+                        </br>
+                        </br>
+                        </br>
                     </div>
+
+
                 {% endfor %}
 
 
@@ -134,14 +128,14 @@
         </div>
     </div>
 
-    <!-- /#wrapper --> 
+    <!-- /#wrapper -->
     <!-- Bootstrap core JavaScript -->
 
     <!-- end of stream page -->
 
     <script>
         function setAttribute() {
-            document.getElementsByName("searchInput").setAttribute("class", "democlass"); 
+            document.getElementsByName("searchInput").setAttribute("class", "democlass");
             document.getElementsByName("searchButton").setAttribute();
         }
 </script>
