@@ -182,6 +182,19 @@
         <h3>Followings</h3>
         <hr>
 
+        {% for followee_group in followees %}
+        <div class="row">
+            {% for followee in followee_group %}
+            <div class="col-sm">
+                <img title="profile image" class="img-circle img-responsive profile-img" src="{% url 'getPhoto' followee.id %}" height="180px" width="180px" align="middle"/>
+                <a class="btn btn-danger">Unfollow</a>
+                <a class="btn btn-success">Chat</a>
+            </div>
+            {% endfor %}
+        </div>
+        {% endfor %}
+
+        <!--
         <div class="row">
             <div class="col-sm">
                 <img title="profile image" class="img-circle img-responsive profile-img" src="default2.jpeg" height="180px" width="180px" align="middle"/>
@@ -207,6 +220,7 @@
                 <a class="btn btn-success">Chat</a>
             </div>
         </div>
+    -->
 
 
     </div>

@@ -79,4 +79,9 @@ class Profile(models.Model):
 	picture          = models.FileField(upload_to="images", blank=True)
 	content_type     = models.CharField(max_length=50,default="")
 
+class ChatLog(models.Model):
+	room_id = models.CharField(max_length=100)
+	message = models.CharField(max_length=100)
+	time = models.DateTimeField(auto_now_add=True)
+
 

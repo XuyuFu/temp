@@ -59,4 +59,5 @@ urlpatterns = [
     url(r'^logout/$', views.logout, name='logout'),
     url(r'^notifications/$', views.notification, name='notification'),
     url(r'^getAllProgressAndComment/$', views.get_all),
+    url(r'^chat/', include('payfun.urls')),
 ]

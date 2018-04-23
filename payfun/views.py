@@ -30,6 +30,10 @@ from googleplaces import GooglePlaces, types, lang
 from django.contrib.auth import logout as auth_logout
 from django.http import HttpResponseRedirect
 
+from django.shortcuts import render
+from django.utils.safestring import mark_safe
+import json
+
 
 def login_page(request):
     return render(request,"login.html")
@@ -246,7 +250,20 @@ def activitydetail(request, activity_id):
 
     return render(request, 'project_detail.html',{'activity':Entry_Activity, 'my_activity': my_activity,"activity_followed": activity_followed})
 
+def groupByNum(elemList, num):
+    result_groups = []
+    temp_group = []
 
+    for index, elem in enumerate(elemList):
+        if index % num == 0 and len(temp_group) != 0:
+            result_groups.append(temp_group)
+            temp_group = []
+            temp_group.append(elem)
+        else:
+            temp_group.append(elem)
+
+    result_groups.append(temp_group)
+    return result_groups
 
 @login_required
 def profile(request, user_name):
@@ -271,6 +288,7 @@ def profile(request, user_name):
         if request.user.username == user_name :
             Edit_form = EditForm(instance = Entry)
             followees = Entry.followee.all()
+            followees = groupByNum(followees, 4)
             context = {
                 'entry':Entry,
                 'form': Edit_form,
@@ -331,6 +349,7 @@ def profile(request, user_name):
                     }
         my_entry = Profile.objects.get(username = request.user.username)
         followees = my_entry.followee.all()
+        followees = groupByNum(followees, 4)
         context['followees'] = followees
         context['error'] = errors
         return render(request, 'profile.html', context)
@@ -776,3 +795,13 @@ def get_all(request):
     data = {'last_update_time': latest_time, 'comments': response_comment_data, 'progress': response_progress_data}
     data1 = json.dumps(data)
     return HttpResponse(data1, content_type='application/json')
+
+
+def test(request):
+    return render(request, 'test.html', {})
+
+# return the chatting room
+def room(request, room_name):
+    return render(request, 'chat.html', {
+        'room_name_json': mark_safe(json.dumps(room_name))
+    })
