@@ -29,6 +29,8 @@ class Activity(models.Model):
 	is_start = models.BooleanField() # whether the activity has started
 	is_end = models.BooleanField() # whether the activity has failed, whether success or failure
 	is_success = models.BooleanField(blank=True)
+	
+
 
 class LauncherAndActivity(models.Model):
 	launcher = models.ForeignKey(User, on_delete=models.CASCADE)

@@ -589,7 +589,9 @@ def transfer(request, dollars, recipient_email):
     # Get the paypal redirect address from payment.py:
     redirect_address, pay_key = transfer(recipient_email, dollars)
 
-    return redirect(redirect_address)
+    return redirect(redirect_address) 
+    # 这样写给了一个return的redirect，可能是不用返回的
+
     # payment(recipient_email, dollars)
     # return render(request, "paybutton.html")
 
@@ -612,6 +614,7 @@ def refund(request):
     dollars = info[2]
     redirect_address = payment(email, dollars)
     return redirect(redirect_address)
+     # 这样写给了一个return的redirect，可能是不用返回的
 
 @login_required()
 def payhome(request):
