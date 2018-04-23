@@ -29,6 +29,8 @@ class Activity(models.Model):
 	is_start = models.BooleanField() # whether the activity has started
 	is_end = models.BooleanField() # whether the activity has failed, whether success or failure
 	is_success = models.BooleanField(blank=True)
+	followee = models.ManyToManyField(User, related_name='followeeForActivity')
+	sponseree = models.ManyToManyField(User, related_name='sponsereeForActivity')
 
 class LauncherAndActivity(models.Model):
 	launcher = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -59,11 +61,11 @@ class Comment(models.Model):
  	time = models.DateTimeField(auto_now_add=True)
 
 class Notification(models.Model):
- 	activity = models.ForeignKey(Activity, on_delete=models.CASCADE)
- 	sponsor = models.ForeignKey(User, on_delete=models.CASCADE)
- 	notification = models.CharField(max_length=150)
- 	time = models.DateTimeField()
-
+	activity = models.ForeignKey(Activity, on_delete=models.CASCADE)
+	receiver = models.ForeignKey(User, on_delete=models.CASCADE)
+	notification_content = models.CharField(max_length=150)
+	time = models.DateTimeField()
+	read = models.BooleanField()
 
 class Profile(models.Model):
 	username         = models.CharField(max_length=40)

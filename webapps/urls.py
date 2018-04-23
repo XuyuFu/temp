@@ -18,6 +18,7 @@ from django.contrib import admin
 from django.contrib.auth import views as auth_views
 from payfun import views
 from django.views.generic.base import RedirectView
+from django.conf.urls import include
 
 urlpatterns = [
     url(r'^$', views.login_page, name='login_page'),
@@ -41,7 +42,6 @@ urlpatterns = [
     url(r'^followActivity/(?P<activity_id>\S+)$', views.followActivity, name='followActivity'),
     url(r'^unfollowActivity/(?P<activity_id>\S+)$', views.unfollowActivity, name='unfollowActivity'),
     url(r'^searchActivity/$', views.searchActivity, name='searchActivity'),
-    url(r'^notifications/$', views.notifications, name='notifications'),
     url(r'^donations/$', views.donations, name='donations'),
     url(r'^followings/$', views.followings, name='followings'),
     url(r'^get-post-comment$', views.get_post_comment),
@@ -55,4 +55,8 @@ urlpatterns = [
     url(r'^payhome$', views.payhome, name="payHome"),
     url(r'^searchLocation/', views.searchLocation, name="searchLocation"),
     # url(r'^.*$', RedirectView.as_view(pattern_name='login_page', permanent=False)),
+    url(r'^oauth/', include('social_django.urls', namespace='social')),
+    url(r'^logout/$', views.logout, name='logout'),
+    url(r'^notifications/$', views.notification, name='notification'),
+    url(r'^getAllProgressAndComment/$', views.get_all),
 ]

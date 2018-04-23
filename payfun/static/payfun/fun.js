@@ -9,6 +9,8 @@ function addComment(activity_id) {
     console.log(itemTextValue);
     itemTextElement.value = '';
     displayError_comment('');
+    //alert("1");
+
 
     if (itemTextValue != "") {
         $.ajax({
@@ -18,15 +20,19 @@ function addComment(activity_id) {
             dataType: "json",
             success: function (response) {
                 updateHelper(response);
+                //alert("2");
             }
         });
     }
 }
 
 function updateHelper(response) {
-    var comments = JSON.parse(response['comments'])
-    var progress = JSON.parse(response['progress'])
-    lastUpdateTime = response['last_update_time']
+    //alert("3");
+    var comments = JSON.parse(response['comments']);
+    console.log(comments);
+    var progress = JSON.parse(response['progress']);
+    console.log(progress);
+    lastUpdateTime = response['last_update_time'];
 
     $(progress).each(function() {
          var target = "#progress-list-" + this.post_id;
@@ -36,15 +42,19 @@ function updateHelper(response) {
     $(comments).each(function() {
         var target = "#comment-list-" + this.post_id;
         $(target).append(this.html);
+        //alert("00");
     });
+    //alert("4");
 }
 
 function addProgress(activity_id) {
+    //alert("000");
     var itemTextElement = document.getElementById("progress-"+activity_id);
     var curPage = window.location.href.split("/")[3];
     var itemTextValue   = itemTextElement.value;
     itemTextElement.value = '';
     displayError_progress('');
+    //alert("111");
     if (itemTextValue != "") {
         $.ajax({
             url: "/add-progress",
@@ -52,7 +62,9 @@ function addProgress(activity_id) {
             data: "progress=" + itemTextValue + "&activity_id=" + activity_id + "&last_update_time=" + lastUpdateTime + "&cur_page=" + curPage + "&csrfmiddlewaretoken=" + getCSRFToken(),
             dataType: "json",
             success: function (response) {
+                //alert("222");
                 updateHelper(response);
+
             }
         });
     }
@@ -116,6 +128,7 @@ function getCSRFToken() {
 }
 
 function getProgressComment() {
+
     var tmp = window.location.href.split("/");
     console.log(tmp);
     console.log(tmp);
@@ -138,5 +151,22 @@ function getProgressComment() {
     });
 }
 
-window.onload = getProgressComment;
-// window.setInterval(getProgressComment, 5000);
+
+
+function initial(){
+    //alert("11111111");
+    var curPage = window.location.href.split("/")[3];
+    if(window.location.href.split("/").length>4)
+        id = window.location.href.split("/")[4];
+    //alert("11111111.55555555555");
+     $.ajax({
+        url: "/getAllProgressAndComment",
+        dataType: "json",
+        data: "&cur_page=" + curPage + "&activity_id="+ id + "&csrfmiddlewaretoken=" + getCSRFToken(),
+        success: updateHelper
+    });
+
+}
+window.onload = initial;
+
+//window.setInterval(getProgressComment, 5000);
