@@ -126,29 +126,23 @@
 
                             <div>
 
-                                <div>
-                                    <form action="{% url 'searchLocation' %}" method="get">
-                                        <input id="query" name="query" type="text" value="Please Input the Location Here!"/>
-                                        <input id="search" name="search" type="submit" value="Search"/>
+                                <div class="collapse navbar-collapse" id="navbarCollapse">
+                                    <form class="form-inline mt-2 mt-md-0" method="get" action="{% url 'searchLocation' %}">
+                                        <input class="form-control mr-sm-2" type="text" placeholder="Search location here" aria-label="Search" name="query" style="margin-top: 5px;" id="query">
+                                        <button class="btn btn-primary" type="submit" name="search" id="search" style="margin-top: 5px;"><span class="glyphicon glyphicon-search"></span></button>
                                         {% csrf_token %}
                                     </form>
+
+                                    <br/>
+
+                                    <div class="locations">
+                                        {% for l in locations %}
+                                        <button class="btn btn-primary" class="location" type="button" onclick="setLocation('{{l.name}}', '{{l.id}}')">{{l.name}}</button>
+                                        {% endfor %}
+                                    </div>
+
                                 </div>
 
-                                <div class="locations">
-                                    {% for l in locations %}
-                                        <button class="location" type="button" onclick="setLocation('{{l.name}}', '{{l.id}}')">{{l.name}}</button>
-                                        <font>{{l.address}}</font>
-                                    {% endfor %}
-                                </div>
-
-                                <div>
-                                    <form action="{% url 'searchLocation' %}" method="post">
-                                        <input id="choice" name="choice" type="text"/>
-                                        <input id="choice-id" name="choice-id" type="text"/>
-                                        <input id="record" name="record" type="submit" value="Submit"/>
-                                        {% csrf_token %}
-                                    </form>
-                                </div>
 
                                 {% if link %}
                                     <div>
@@ -181,6 +175,16 @@
                                 <div class="wrap-input100 validate-input" data-validate = "Username is required">
                                     <input class="input100" type="text" name="location" id="location"/>
                                     <input type="hidden" name="location_id" id="location_id" />
+                                    <span class="focus-input100"></span>
+                                </div>
+
+                                <div class="p-t-13 p-b-9">
+                                    <span class="txt1">
+                                        PayPal Email Account
+                                    </span>
+                                </div>
+                                <div class="wrap-input100 validate-input" data-validate = "Username is required">
+                                    <input class="input100" type="text" name="paypal_email" id="paypal_email"/>
                                     <span class="focus-input100"></span>
                                 </div>
 

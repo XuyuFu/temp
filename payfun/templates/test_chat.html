@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/html">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Stream Page</title>
+    <!-- Bootstrap core CSS -->
+    <link href="../../static/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+    <script src="../../static/payfun/test_chat.css"></script>
+
+    <link href="../static/payfun/new.css" rel="stylesheet">
+
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <style>
+        .mainBlock {
+            margin-left: 140px; /* Same width as the sidebar + left position in px */
+            font-size: 28px; /* Increased text to enable scrolling */
+            padding: 0px 10px;
+        }
+
+        .sidenav {
+            width: 160px; /* Set the width of the sidebar */
+            position: fixed; /* Fixed Sidebar (stay in place on scroll) */
+            z-index: 1; /* Stay on top */
+            left: 0;
+            overflow-x: hidden; /* Disable horizontal scroll */
+            padding: 6px 8px 6px 16px;
+        }
+
+        .list-group-item {
+            border-style: none;
+        }
+
+        #About {
+            background: url("../static/images/icons/write.svg") no-repeat scroll center center / 100% auto rgba(0, 0, 0, 0);
+        }
+
+        #signIn {
+            margin-right: 10px;
+        }
+
+        li {
+            margin-top: 0px;
+            margin-bottom: 0px;
+        }
+
+        hr {
+            margin-top: 0px;
+            margin-bottom: 0px;
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+
+    <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+      <a class="navbar-brand" href="{url 'stream'}">PayFun</a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarCollapse">
+        <form class="form-inline mt-2 mt-md-0" method="post" action="/searchActivity/">
+          <input class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search" name="searchInput" style="margin-top: 5px;">
+          <button class="btn btn-primary" type="submit" name="searchButton" style="margin-top: 5px;"><span class="glyphicon glyphicon-search"></span></button>
+          {% csrf_token %}
+        </form>
+      </div>
+      <a href="/global-stream">Home</a>
+  </nav>
+
+    <div class="container" id="main_block">
+
+        <div class="sidenav">
+
+            <div class="btn-group-vertical">
+                <a class='btn btn-light' href="{% url 'launCh' %}"><i class="fa fa-pencil-square-o"></i>Create</a>
+                <a class="btn btn-light" href="#"><i class="fa fa-money"></i>Donations</a>
+                <a class="btn btn-light" href="#"><i class="fa fa-archive"></i>Projects</a>
+                <a class="btn btn-light" href="#"><i class="fa fa-star"></i>Followings</a>
+                <a class="btn btn-light" href="{% url 'profile' user.username %}"><i class="fa fa-user"></i></i>Profiles</a>
+                <a class="btn btn-light" href="/notifications"><i class="fa fa-envelope-square"></i>Notifications</a>
+                <a class="btn btn-light" href="/notifications"><i class="fa fa-envelope-square"></i>Chat</a>
+            </div>
+
+        </div>
+
+        <div>
+        <ul class="nav nav-pills nav-stacked col-sm-2 col-md-2">
+            <ol>
+                <li class="" width="auto"><a href="#tab_a" data-toggle="pill">Pill A</a></li>
+                <li class=""><a href="#tab_b" data-toggle="pill">Pill B</a></li>
+                <li class="active"><a href="#tab_c" data-toggle="pill">Pill C</a></li>
+                <li><a href="#tab_d" data-toggle="pill">Pill D</a></li>
+            <ol>
+        </ul>
+
+        <div class="tab-content col-sm-10 col-md-10">
+            <div class="tab-pane" id="tab_a">
+                <textarea id="chat-log" cols="100" rows="20"></textarea><br/>
+                <input id="chat-message-input" type="text" size="100"/><br/>
+                <input class="btn btn-primary" id="chat-message-submit" type="button" value="Send"/>
+            </div>
+
+            <div class="tab-pane" id="tab_b">
+                <textarea id="chat-log" cols="100" rows="20"></textarea><br/>
+                <input id="chat-message-input" type="text" size="100"/><br/>
+                <input class="btn btn-primary" id="chat-message-submit" type="button" value="Send"/>
+            </div>
+
+            <div class="tab-pane active" id="tab_c">
+                <textarea id="chat-log" cols="100" rows="20"></textarea><br/>
+                <input id="chat-message-input" type="text" size="100"/><br/>
+                <input class="btn btn-primary" id="chat-message-submit" type="button" value="Send"/>
+            </div>
+
+            <div class="tab-pane" id="tab_d">
+                <textarea id="chat-log" cols="100" rows="20"></textarea><br/>
+                <input id="chat-message-input" type="text" size="100"/><br/>
+                <input class="btn btn-primary" id="chat-message-submit" type="button" value="Send"/>
+            </div>
+        </div><!-- tab content -->
+    </div>
+
+    </div>
+
+
+    <script>
+        function setAttribute() {
+            document.getElementsByName("searchInput").setAttribute("class", "democlass");
+            document.getElementsByName("searchButton").setAttribute();
+        }
+    </script>
+
+    <script>
+        var roomName = {{ room_name_json }};
+
+        var chatSocket = new WebSocket(
+            'ws://' + window.location.host +
+            '/ws/chat/' + roomName + '/');
+
+        chatSocket.onmessage = function(e) {
+            var data = JSON.parse(e.data);
+            var message = data['message'];
+            document.querySelector('#chat-log').value += (message + '\n');
+        };
+
+        chatSocket.onclose = function(e) {
+            console.error('Chat socket closed unexpectedly');
+        };
+
+        document.querySelector('#chat-message-input').focus();
+        document.querySelector('#chat-message-input').onkeyup = function(e) {
+            if (e.keyCode === 13) {  // enter, return
+                document.querySelector('#chat-message-submit').click();
+            }
+        };
+
+        document.querySelector('#chat-message-submit').onclick = function(e) {
+            var messageInputDom = document.querySelector('#chat-message-input');
+            var message = messageInputDom.value;
+            chatSocket.send(JSON.stringify({
+                'message': message
+            }));
+
+            messageInputDom.value = '';
+        };
+    </script>
+
+</body>
+
+</html>

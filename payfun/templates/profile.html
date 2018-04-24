@@ -101,7 +101,7 @@
         <div class="span3 well">
         <center>
             <img src="https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcRbezqZpEuwGSvitKy3wrwnth5kysKdRqBW54cAszm_wiutku3R" name="aboutme" width="140" height="140" border="0" class="img-circle"></a>
-            <h3 class="media-heading">Joe Sixpack <small>USA</small></h3>
+            <h3 class="media-heading">{{ entry.username }}<small>USA</small></h3>
             <span><strong>Tag: </strong></span>
             <span class="label label-warning">Writer</span>
             <span class="label label-info">Sports lover</span>
@@ -109,6 +109,59 @@
             <br />
             <i class="glyphicon glyphicon-envelope"></i>email@example.com
             <h5>Credits: 10</h5>
+            <!-- a class="btn btn-primary" href="{% url 'followUser' entry.username %}">Follow</a-->
+            {% if tag == '1'%}
+            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#Edit-profile">
+                Edit profile
+            </button>
+            {% else %}
+                <!-- Follow and unfollow -->
+                {% if followma == '1' %}
+                    <a class="btn btn-success" href="{% url 'followUser' entry.username %}">Follow</a>
+                {% else %}
+                    <a class="btn btn-danger" href="{% url 'unfollowUser' entry.username %}">Unfollow</a>
+                {% endif %}
+            {% endif %}
+
+            <!-- Modal -->
+            <div class="modal fade" id="Edit-profile" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Edit your profile here</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+
+                        <form method="post" enctype="multipart/form-data" action="/profile/{{user.username}}">
+                            <table>
+                                <img src="/photo/{{ entry.username }}" width="200px">
+                                {% for field in form.visible_fields %}
+                                <tr>
+                                    <td>{{field.label_tag}}</td>
+                                    <td>{{field}}</td>
+                                    <td class="error">
+                                        {% for error in field.errors %} {{error}} {% endfor %}
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </table>
+
+                            {% for field in form.hidden_fields %}
+                            {{field}} {{field.errors}}
+                            {% endfor %}
+                            {% csrf_token %}
+                            <input type="submit" value="Update">
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                <button type="submit" class="btn btn-primary">Save changes</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
         </center>
         <hr>
         <div class="modal-body">

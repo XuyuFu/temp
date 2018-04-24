@@ -130,56 +130,46 @@
                                         <form method="post" action="{% url 'pay' activity.id %}" id="donate-{{ activity.id }}">
                                             {% csrf_token %}
                                             {{ form }}
-                                            <input type="submit" class="btn" value="donate" id="donate_amount"/>
-                                        </form>
-                                    </div>
-                                </div>
-
-                                <div class="col-sm">
-                                    <div>
-                                        <form method="post" action="{% url 'refund' activity.id %}" id="refund-{{ activity.id }}">
-                                            {% csrf_token %}
-                                            <!-- What is the form here? -->
-                                            {{ form }}
-                                            <input type="submit" class="btn" value="refund"/>
+                                            <input type="submit image" src="https://www.paypalobjects.com/webstatic/en_US/i/btn/png/btn_addtocart_120x26.png" alt="Donate" class="btn" value="donate" id="donate_amount"/>
                                         </form>
                                     </div>
                                 </div>
 
                                 <script>
-        paypal.Button.render({
-           env: 'sandbox', // sandbox | production
-            // PayPal Client IDs - replace with your own
-            // Create a PayPal app: https://developer.paypal.com/developer/applications/create
-            client: {
-                sandbox:    'AXXyS4oWEGmGgsZDp5IFJqse17JG4gh0LTy6Ab2qLdJrl8IL5mXQ64S1BXm4GDMeQJNatWv-amMpoL0I',
-                production: 'fuxuyu@outlook.com'
-            },
-            // Show the buyer a 'Pay Now' button in the checkout flow
-            commit: true,
-            // payment() is called when the button is clicked
-            payment: function(data, actions) {
-                var amount = document.getElementById("amount");
-                // Make a call to the REST api to create the payment
-                return actions.payment.create({
-                    payment: {
-                        transactions: [
-                            {
-                                amount: { total: amount.value, currency: 'USD' }
-                            }
-                        ]
-                    }
-                });
-            },
-            // onAuthorize() is called when the buyer approves the payment
-            onAuthorize: function(data, actions) {
-                // Make a call to the REST api to execute the payment
-                return actions.payment.execute().then(function() {
-                     window.alert('Payment Complete!');
-                });
-            }
-        }, '#paypal-button-container');
-    </script>
+                                    paypal.Button.render({
+                                        env: 'sandbox', // sandbox | production
+                                        // PayPal Client IDs - replace with your own
+                                        // Create a PayPal app: https://developer.paypal.com/developer/applications/create
+                                        client: {
+                                            sandbox:    'AXXyS4oWEGmGgsZDp5IFJqse17JG4gh0LTy6Ab2qLdJrl8IL5mXQ64S1BXm4GDMeQJNatWv-amMpoL0I',
+                                            production: 'fuxuyu@outlook.com'
+                                        },
+                                        // Show the buyer a 'Pay Now' button in the checkout flow
+                                        commit: true,
+                                        // payment() is called when the button is clicked
+                                        payment: function(data, actions) {
+                                            var amount = document.getElementById("amount");
+                                            // Make a call to the REST api to create the payment
+                                            return actions.payment.create({
+                                                payment: {
+                                                    transactions: [
+                                                    {
+                                                        amount: { total: amount.value, currency: 'USD' }
+                                                    }
+                                                    ]
+                                                }
+                                            });
+                                        },
+
+                                        // onAuthorize() is called when the buyer approves the payment
+                                         onAuthorize: function(data, actions) {
+                                            // Make a call to the REST api to execute the payment
+                                            return actions.payment.execute().then(function() {
+                                                window.alert('Payment Complete!');
+                                            });
+                                        }
+                                    }, '#paypal-button-container');
+                                </script>
                             </div>
 
                             <input type="image" src="https://www.paypalobjects.com/en_US/i/btn/btn_buynowCC_LG.gif" border="0" name="submit" alt="PayPal - The safer, easier way to pay online!">
@@ -209,43 +199,50 @@
                     <p>{{activity.content}}</p>
 
                     <h7>Target amount: ${{activity.target_money}}</h7>
-                    <h7>Follower: 10 Donator: 2</h7>
                     <span style="width: 100px"></span>
+                    <h7>Follower: 10 Donator: 2</h7>
+                    <br/>
+                    <br/>
 
                 </div>
 
                 <hr>
+                <br/>
 
                 <div>
                     <ol id="progress-list-{{activity.id}}"></ol>
                 </div>
                 {% if my_activity == '1' %}
                     <br>
-                    <div>
-                        <input class="form-control" rows="1", name="progress-{{activity.id}}" id="progress-{{activity.id}}">
 
+                    <div class="card my-4 comment_input">
+                        <h5 class="card-header">Publish new progress:</h5>
+                        <div class="card-body">
+                            <div class="form-group">
+                                <input class="form-control" rows="1" name="progress-{{activity.id}}" id="progress-{{activity.id}}">
+                            </div>
+                            <button type="submit" class="btn btn-primary"  onclick='addProgress({{ activity.id }})'>Submit</button>
+                            <span id="error-comment" class="error"></span>
+                        </div>
                     </div>
-                    <button type="submit" class="btn btn-primary"  onclick='addProgress({{ activity.id }})'>Update Progress</button>
-                    <span id="error-progress" class="error"></span>
-                {% endif %}
+                    {% endif %}
 
+                </div> 
 
-            <div class="jumbotron">
-                <div class="card my-4 comment_input">
-                    <h5 class="card-header">Leave a Comment:</h5>
-                    <div class="card-body">
+                <div class="jumbotron">
+                    <ol id="comment-list-{{activity.id}}"></ol>
+                    <div class="card my-4 comment_input">
+                        <h5 class="card-header">Leave a Comment:</h5>
+                        <div class="card-body">
                             <div class="form-group">
                                 <input class="form-control" rows="1", name="comment-{{activity.id}}" id="comment-{{activity.id}}">
                             </div>
                             <button type="submit" class="btn btn-primary"  onclick='addComment({{ activity.id }})'>Submit</button>
                             <span id="error-comment" class="error"></span>
+                        </div>
                     </div>
                 </div>
             </div>
-              <ol id="comment-list-{{activity.id}}">
-            </ol>
-        </div> 
-    </div>
 
     <!-- /#wrapper --> 
     <!-- Bootstrap core JavaScript -->

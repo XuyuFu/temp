@@ -61,6 +61,10 @@
             margin-bottom: 0px;
         }
 
+        table, th, td {
+            border: 40px;
+        }
+
     </style>
 
 </head>
@@ -75,16 +79,18 @@
       </button>
       <div class="collapse navbar-collapse" id="navbarCollapse">
         <form class="form-inline mt-2 mt-md-0" method="post" action="/searchActivity/">
-          <input class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search" name="searchInput" style="margin-top: 5px;">
+          <input class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search" name="searchInput" style="margin-top: 5px; width: 350px">
           <button class="btn btn-primary" type="submit" name="searchButton" style="margin-top: 5px;"><span class="glyphicon glyphicon-search"></span></button>
           {% csrf_token %}
         </form>
       </div>
 
-          <form method="post" action="/logout/">
-                                    <input type="submit" value="logout">
-                                {% csrf_token %}
-                                </form>
+      <h3><font color="white">Hello </font><a href="{% url 'profile' user.username %}">{{user.username}}</a></h3>
+      <span>10px</span>
+      <form method="post" action="/logout/">
+        <input class="btn btn-primary" type="submit" value="logout" style="margin-top: 5px;">
+        {% csrf_token %}
+      </form>
     </nav>
 
     <div class="container" id="main_block">
@@ -100,6 +106,7 @@
                 {% if has_unread == True %}
                     asdasdasdasdasdsadasd
                 {% endif %}
+                <a class="btn btn-light" href="test_chat.html"><i class="fa fa-comments"></i>Chat</a>
             </div>
             
         </div>
@@ -109,22 +116,44 @@
                 {% for activity_group in activities %}
                     <div class="row">
                         {% for activity in activity_group %}
-                            <div class="col-sm">
+                            <div class="col-sm" width="250px">
                                 <div class="card text-white bg-dark mb-3" style="max-width: 40rem">
-                                    <img title="profile image" class="img-circle img-responsive profile-img" src="{% url 'getPhoto' activity.id %}" height="180px" width="180px" align="middle"/>
+                                    <img class="card-img-top" src="{% url 'getPhoto' activity.id %}" alt="Card image cap">
                                     <div class="card-header">{{activity.title}}</div>
                                     <div class="card-body">
-                                        <h5 class="card-title">By: <a href="">{{activity.launcher.username}}</a> on {{activity.post_time}}</h5>
+                                        <h5 class="card-title">By: <a href="{% url 'profile' activity.launcher.username %}">{{activity.launcher.username}}</a> on {{activity.post_time}}</h5>
                                         <p class="card-text">Location: <a href="https://www.google.com/maps/search/?api=1&query=any&query_place_id={{ activity.location_id }}">{{activity.location}}</a></p>
                                         <p class="card-text">{{activity.content}}</p>
-                                        <a href="/activitydetail/{{activity.id }}">Details</a>
-                                        <a href="{% url 'profile' activity.launcher.username %}" class="btn btn-primary">Know more</a>
+                                        <a class="btn btn-primary" href="/activitydetail/{{activity.id }}">Know More</a>
+                                        
                                     </div>
                                 </div>
                             </div>
                         {% endfor %}
                     </div>
                 {% endfor %}
+
+                <table cellspacing="10">
+                {% for activity_group in activities %}
+                    <tr contenteditable="true">
+                        {% for activity in activity_group %}
+                            <td colspan="2">
+                                <div class="card text-white bg-dark mb-3" style="max-width: 40rem">
+                                    <img class="card-img-top" src="{% url 'getPhoto' activity.id %}" alt="Card image cap">
+                                    <div class="card-header">{{activity.title}}</div>
+                                    <div class="card-body">
+                                        <h5 class="card-title">By: <a href="{% url 'profile' activity.launcher.username %}">{{activity.launcher.username}}</a> on {{activity.post_time}}</h5>
+                                        <p class="card-text">Location: <a href="https://www.google.com/maps/search/?api=1&query=any&query_place_id={{ activity.location_id }}">{{activity.location}}</a></p>
+                                        <p class="card-text">{{activity.content}}</p>
+                                        <a class="btn btn-primary" href="/activitydetail/{{activity.id }}">Know More</a>
+                                        
+                                    </div>
+                                </div>
+                            <td>
+                        {% endfor %}
+                    </tr>
+                {% endfor %}
+                </table>
 
 
             </div>

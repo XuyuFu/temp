@@ -31,6 +31,14 @@ class Activity(models.Model):
 	is_success = models.BooleanField(blank=True)
 	followee = models.ManyToManyField(User, related_name='followeeForActivity')
 	sponseree = models.ManyToManyField(User, related_name='sponsereeForActivity')
+	paypal_account = models.CharField(max_length=1000)
+# <<<<<<< HEAD
+	
+
+# =======
+# 	followee = models.ManyToManyField(User, related_name='followeeForActivity')
+# 	sponseree = models.ManyToManyField(User, related_name='sponsereeForActivity')
+# >>>>>>> 7e37414f9f910d65ebd0ad466c58d7e4fe644c12
 
 class LauncherAndActivity(models.Model):
 	launcher = models.ForeignKey(User, on_delete=models.CASCADE)

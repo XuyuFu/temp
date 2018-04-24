@@ -180,11 +180,14 @@ def launch(request):
     print("----")
     user = request.user
     user_type = type(user)
+
+    print("paypal email" + request.POST.get("paypal_email"))
+
     lauched_activity = Activity(content = request.POST.get('description'),location = request.POST.get('location'),
                                 location_id=request.POST.get('location_id'), target_money=request.POST.get('target_money'),
                                 picture=request.FILES['image'],title=request.POST.get('title'),launcher=request.user,
                                 post_time=timezone.now(),start_time=timezone.now(),end_time= timezone.now(),is_end=False,
-                                is_success=False, is_start=False)
+                                is_success=False, is_start=False, paypal_account=request.POST.get('paypal_email'))
 
     # launch_form_final = LaunchForm(request.POST, request.FILES)
     # if not launch_form_final.is_valid():
@@ -283,13 +286,25 @@ def profile(request, user_name):
             new_profile_entry.save()
             Entry = get_object_or_404(Profile, username=user_name)
 
-
-
         if request.user.username == user_name :
             Edit_form = EditForm(instance = Entry)
             followees = Entry.followee.all()
-            followees = groupByNum(followees, 4)
+
+            user = User.objects.get(username= user_name)
+            activity_list = Activity.objects.filter(launcher= user)
+            success_account1 = 0
+            fail_account1 = 0
+            for activity in activity_list:
+                if activity.is_success == True:
+                    success_account1 = success_account1 +1
+                else :
+                    fail_account1 = fail_account1 + 1
+
+
             context = {
+                'activity_list': activity_list,
+                'success_account': success_account1,
+                'fail_account': fail_account1,
                 'entry':Entry,
                 'form': Edit_form,
                 'tag' :'1',
@@ -299,7 +314,23 @@ def profile(request, user_name):
 
         else:
             Profile_form = ProfileForm(instance = Entry)
+
+            user = User.objects.get(username=user_name)
+            activity_list = Activity.objects.filter(launcher=user)
+            success_account1 = 0
+            fail_account1 = 0
+            for activity in activity_list:
+                if activity.is_success == True:
+                    success_account1 = success_account1 + 1
+                else:
+                    fail_account1 = fail_account1 + 1
+
+
+
             context = {
+                'activity_list': activity_list,
+                'success_account': success_account1,
+                'fail_account': fail_account1,
                 'entry':Entry,
                 'form' :Profile_form,
                 'tag':'0',
@@ -334,6 +365,19 @@ def profile(request, user_name):
 
 
         form  = EditForm (request.POST, request.FILES, instance=entry)
+
+        user = User.objects.get(username=user_name)
+        activity_list = Activity.objects.filter(launcher=user)
+        success_account1 = 0
+        fail_account1 = 0
+        for activity in activity_list:
+            if activity.is_success == True:
+                success_account1 = success_account1 + 1
+            else:
+                fail_account1 = fail_account1 + 1
+
+
+
         if not form.is_valid():
             context['form'] = form
             context['message'] = 'Invalid input!'
@@ -342,6 +386,9 @@ def profile(request, user_name):
         else:
             form.save()
             context = {
+                        'activity_list': activity_list,
+                        'success_account': success_account1,
+                        'fail_account': fail_account1,
                         'message': 'Entry updated.',
                         'form' :form,
                         'entry':   entry,
@@ -349,7 +396,6 @@ def profile(request, user_name):
                     }
         my_entry = Profile.objects.get(username = request.user.username)
         followees = my_entry.followee.all()
-        followees = groupByNum(followees, 4)
         context['followees'] = followees
         context['error'] = errors
         return render(request, 'profile.html', context)
@@ -688,12 +734,11 @@ def transfer(request, dollars, recipient_email):
     # Get the paypal redirect address from payment.py:
     redirect_address, pay_key = transfer(recipient_email, dollars)
 
-    return redirect(redirect_address)
+    return redirect(redirect_address) 
+    # 这样写给了一个return的redirect，可能是不用返回的
+
     # payment(recipient_email, dollars)
     # return render(request, "paybutton.html")
-
-
-
 
 @login_required
 def refund(request):
@@ -707,6 +752,7 @@ def refund(request):
     dollars = info[2]
     redirect_address = payment(email, dollars)
     return redirect(redirect_address)
+     # 这样写给了一个return的redirect，可能是不用返回的
 
 @login_required()
 def payhome(request):
@@ -729,7 +775,7 @@ def searchLocation(request):
             place.get_details()
             one['address'] = place.formatted_address
             locations.append(one)
-        context['locations'] = locations
+        context['locations'] = locations[0:5]
         return render(request, 'create_project.html', context)
     if 'choice' in request.POST:
         context['link'] = "https://www.google.com/maps/search/?api=1&query=any" + "&query_place_id=" + request.POST['choice-id']
@@ -805,3 +851,7 @@ def room(request, room_name):
     return render(request, 'chat.html', {
         'room_name_json': mark_safe(json.dumps(room_name))
     })
+
+# the new chat bar
+def test_chat(request):
+    return render(request, 'test_chat.html', {})
