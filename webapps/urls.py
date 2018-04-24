@@ -60,4 +60,6 @@ urlpatterns = [
     url(r'^notifications/$', views.notification, name='notification'),
     url(r'^getAllProgressAndComment/$', views.get_all),
     url(r'^chat/', include('payfun.urls')),
+    url(r'^ratepage/(?P<notification_id>\S+)$', views.ratepage, name="ratepage"),
+    url(r'^rate/(?P<notification_id>\S+)$', views.rate, name="rate"),
 ]

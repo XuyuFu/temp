@@ -885,3 +885,59 @@ def room(request, participant_name):
 # the new chat bar
 def test_chat(request):
     return render(request, 'test_chat.html', {})
+
+
+def ratepage(request, notification_id):
+    notification = Notification.objects.get(id= notification_id)
+    return render(request,"rate.html",{"notification":notification})
+
+def rate(request, notification_id):
+    notification = get_object_or_404(Notification, id = notification_id)
+    activity = notification.activity
+    sponser_name = activity.launcher.username
+    profile = get_object_or_404(Profile, username = sponser_name)
+    rate_count = request.POST.get('rate')
+    rate_count = int(rate_count)
+    activity.total_rate = activity.total_rate + 1
+    activity.rate_cur = ((activity.total_rate-1) * activity.rate_cur+ rate_count) / activity.total_rate
+    if activity.rate_cur >= 3.0:
+        activity.is_success = True
+    else:
+        activity.is_success = False
+    activity.save()
+    print(activity.rate_cur)
+    print(activity.rate_cur)
+    print(activity.rate_cur)
+    print(activity.is_success)
+    print(activity.is_success)
+    print(activity.is_success)
+    profile.total_rate = profile.total_rate+1
+    profile.rate_cur = ((profile.total_rate - 1) * profile.rate_cur + rate_count ) / profile.total_rate
+    profile.save()
+    notification.has_rate = True
+    notification.save()
+    print(profile.rate_cur)
+    print(profile.rate_cur)
+    print(profile.rate_cur)
+
+
+    activities = Activity.objects.all()
+    activity_groups = []
+    temp_group = []
+
+    for index, activity in enumerate(activities):
+        if index % 3 == 0 and len(temp_group) != 0:
+            activity_groups.append(temp_group)
+            temp_group = []
+            temp_group.append(activity)
+        else:
+            temp_group.append(activity)
+
+    activity_groups.append(temp_group)
+
+    all_notification = Notification.objects.filter(receiver=request.user)
+    tag = False
+    for notification in all_notification:
+        if notification.read == False:
+            tag = True
+    return render(request, 'global.html', {'activities': activity_groups, 'has_unread': tag})

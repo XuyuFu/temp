@@ -109,9 +109,15 @@
         <div class="container">
 
                 {% for notification in notifications %}
-
                     <div>
-                        <p>  Activity <a href="/activitydetail/{{notification.activity.id }}">{{ notification.activity.title }}</a>  has a new update at {{ notification.time }}.
+                        {% if "update" in notification.notification_content %}
+                            <p>  Activity <a href="/activitydetail/{{notification.activity.id }}">{{ notification.activity.title }} </a>has update.
+                        {% endif %}
+
+                        {% if "finish" in notification.notification_content %}
+                            <p>  Activity <a href="/activitydetail/{{notification.activity.id }}">{{ notification.activity.title }}</a> has finished, come  <a href="/ratepage/{{ notification.id }}">here </a> for rating!
+                        {% endif %}
+
                         </br>
                         </br>
                         </br>
