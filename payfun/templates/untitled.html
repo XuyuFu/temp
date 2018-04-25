@@ -18,7 +18,8 @@
         <span class="label label-info">Sports lover</span>
         <span class="label label-success">Explorer</span>
         <br/>
-        <h5>Credits: {{ entry.rate_cur }}</h5>
+        <i class="glyphicon glyphicon-envelope"></i>email@example.com
+        <h5>Credits: 10</h5>
             <!-- a class="btn btn-primary" href="{% url 'followUser' entry.username %}">Follow</a-->
             {% if tag == '1' %}
             <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#Edit-profile">
@@ -78,7 +79,7 @@
             <center>
                 <p class="text-left"><h3><strong>Biography</strong></h3>
                 <br>
-                    {{ entry.bio }}</p>
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut sem dui, tempor sit amet commodo a, vulputate vel tellus.</p>
                 <br>
             </center>
         </div>
@@ -185,8 +186,8 @@ google.charts.setOnLoadCallback(drawTimeline);
 function drawPieChart() {
     var data = google.visualization.arrayToDataTable([
         ['Task', 'Hours per Day'],
-        ['projects failed', parseInt('{{ fail_account }}')],
-        ['projects succedded', parseInt('{{ success_account }}')],
+        ['projects failed', parseInt('{{ fail_account1 }}')],
+        ['projects succedded', parseInt('{{ success_account1 }}')],
     ]);
 
     // Optional; add a title and set the width and height of the chart
@@ -195,35 +196,6 @@ function drawPieChart() {
     // Display the chart inside the <div> element with id="piechart"
     var chart = new google.visualization.PieChart(document.getElementById('piechart'));
     chart.draw(data, options);
-}
-
-function convertToMonth(year) {
-    switch(year) {
-        case 'January':
-            return 1;
-        case 'February':
-            return 2;
-        case 'March':
-            return 3;
-        case 'April':
-            return 4;
-        case 'May':
-            return 5;
-        case 'June':
-            return 6;
-        case 'July':
-            return 7;
-        case 'August':
-            return 8;
-        case 'September':
-            return 9;
-        case 'October':
-            return 10;
-        case 'November':
-            return 11;
-        case 'December':
-            return 12;
-    }
 }
 
 function drawTimeline() {
@@ -237,18 +209,15 @@ function drawTimeline() {
     dataTable.addColumn({ type: 'date', id: 'End' });
 
     {% for activity in activity_list %}
-        var startDate = '{{activity.start_time}}'
-        var res1 = startDate.replace(",", " ").split(" ")
-        var endDate = '{{activity.end_time}}';
-        var res2 = endDate.replace(",", " ").split(" ")
-
+        var startDate = new Date({{activity.start_time}});
+        var endDate = new Date({{activity.end_time}});
         dataTable.addRows([
             [ '{{forloop.counter0}}', '{{activity.title}}', 
-            new Date(parseInt(res1[3]), convertToMonth(res1[0]), parseInt(res1[1])), 
-            new Date(parseInt(res2[3]), convertToMonth(res2[0]), parseInt(res2[1])) ]]);
-    {% endfor %}
+            new Date(startDate.getFullYear(), startDate.getMonth(), startDate.getDate()), 
+            new Date(endDate.getFullYear(), endDate.getMonth(), endDate.getDate()) ]]);
+        {% endfor %}
 
-    chart.draw(dataTable);
+        chart.draw(dataTable);
 }
 
 </script>

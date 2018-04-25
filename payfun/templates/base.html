@@ -21,6 +21,8 @@
 
     <link href="../static/payfun/new.css" rel="stylesheet">
 
+    <script type="text/javascript" src="../static/js/payfun/moment.js"></script>
+
     <!-- Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
@@ -82,8 +84,12 @@
         </form>
       </div>
 
-      <button class="btn" id="signIn">Sign in</button>
-      <button class="btn" id="signUp">Sign up</button>
+      <h3><font color="white">Hello </font><a href="{% url 'profile' user.username %}">{{user.username}}</a></h3>
+      <span>10px</span>
+      <form method="post" action="/logout/">
+        <input class="btn btn-primary" type="submit" value="logout" style="margin-top: 5px;">
+        {% csrf_token %}
+      </form>
     </nav>
 
     <div class="container" id="main_block">
@@ -92,11 +98,20 @@
 
             <div class="btn-group-vertical">
                 <a class='btn btn-light' href="{% url 'launCh' %}"><i class="fa fa-pencil-square-o"></i>Create</a>
-                <a class="btn btn-light" href="#"><i class="fa fa-money"></i>Donations</a>
-                <a class="btn btn-light" href="#"><i class="fa fa-archive"></i>Projects</a>
-                <a class="btn btn-light" href="#"><i class="fa fa-star"></i>Followings</a>
+                <a class="btn btn-light" href="{% url 'donations' %}"><i class="fa fa-money"></i>Donations</a>
+                <a class="btn btn-light" href="{% url 'followings' %}"><i class="fa fa-star"></i>Followings</a>
                 <a class="btn btn-light" href="{% url 'profile' user.username %}"><i class="fa fa-user"></i></i>Profiles</a>
-                <a class="btn btn-light" href="{% url 'notifications' %}"><i class="fa fa-envelope-square"></i>Notifications</a>
+                {% if has_unread == True %}
+                    <a class="btn btn-light" href="/notifications"><i class="fa fa-envelope-square" style="color:red;"></i>Notifications</a>
+                {% else %}
+                    <a class="btn btn-light" href="/notifications"><i class="fa fa-envelope-square"></i>Notifications</a>
+                {% endif %}
+
+                {% if has_unread_chat == True %}
+                    <a class="btn btn-light" href="{% url 'room' %}"><i class="fa fa-comments" style="color:red;"></i>Chat</a>
+                {% else %}
+                    <a class="btn btn-light" href="{% url 'room' %}"><i class="fa fa-comments"></i>Chat</a>
+                {% endif %}
             </div>
             
         </div>

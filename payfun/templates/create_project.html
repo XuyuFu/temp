@@ -38,44 +38,44 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.4/js/bootstrap-select.min.js"></script>
 
     <style>
-        .mainBlock {
-            margin-left: 140px; /* Same width as the sidebar + left position in px */
-            font-size: 28px; /* Increased text to enable scrolling */
-            padding: 0px 10px;
-        }
+    .mainBlock {
+        margin-left: 140px; /* Same width as the sidebar + left position in px */
+        font-size: 28px; /* Increased text to enable scrolling */
+        padding: 0px 10px;
+    }
 
-        .sidenav {
-            width: 160px; /* Set the width of the sidebar */
-            position: fixed; /* Fixed Sidebar (stay in place on scroll) */
-            z-index: 1; /* Stay on top */
-            left: 0;
-            overflow-x: hidden; /* Disable horizontal scroll */
-            padding: 6px 8px 6px 16px;
-        }
+    .sidenav {
+        width: 160px; /* Set the width of the sidebar */
+        position: fixed; /* Fixed Sidebar (stay in place on scroll) */
+        z-index: 1; /* Stay on top */
+        left: 0;
+        overflow-x: hidden; /* Disable horizontal scroll */
+        padding: 6px 8px 6px 16px;
+    }
 
-        .list-group-item {
-            border-style: none;
-        }
+    .list-group-item {
+        border-style: none;
+    }
 
-        #About {
-            background: url("../static/images/icons/write.svg") no-repeat scroll center center / 100% auto rgba(0, 0, 0, 0);
-        }
+    #About {
+        background: url("../static/images/icons/write.svg") no-repeat scroll center center / 100% auto rgba(0, 0, 0, 0);
+    }
 
-        #signIn {
-            margin-right: 10px;
-        }
+    #signIn {
+        margin-right: 10px;
+    }
 
-        li {
-            margin-top: 0px;
-            margin-bottom: 0px;
-        }
+    li {
+        margin-top: 0px;
+        margin-bottom: 0px;
+    }
 
-        hr {
-            margin-top: 0px;
-            margin-bottom: 0px;
-        }
+    hr {
+        margin-top: 0px;
+        margin-bottom: 0px;
+    }
 
-    </style>
+</style>
 
 </head>
 
@@ -101,181 +101,190 @@
         </nav>
     </div>
 
-        <div class="container" id="main_block">
+    <div class="container" id="main_block">
 
-            <div class="sidenav">
-                <div class="btn-group-vertical">
-                    <a class='btn btn-light' href="{% url 'launCh' %}"><i class="fa fa-pencil-square-o"></i>Create</a>
-                    <a class="btn btn-light" href="#"><i class="fa fa-money"></i>Donations</a>
-                    <a class="btn btn-light" href="#"><i class="fa fa-archive"></i>Projects</a>
-                    <a class="btn btn-light" href="#"><i class="fa fa-star"></i>Followings</a>
-                    <a class="btn btn-light" href="{% url 'profile' user.username %}"><i class="fa fa-user"></i></i>Profiles</a>
+        <div class="sidenav">
+            <div class="btn-group-vertical">
+                <a class='btn btn-light' href="{% url 'launCh' %}"><i class="fa fa-pencil-square-o"></i>Create</a>
+                <a class="btn btn-light" href="{% url 'donations' %}"><i class="fa fa-money"></i>Donations</a>
+                <a class="btn btn-light" href="{% url 'followings' %}"><i class="fa fa-star"></i>Followings</a>
+                <a class="btn btn-light" href="{% url 'profile' user.username %}"><i class="fa fa-user"></i></i>Profiles</a>
+                {% if has_unread == True %}
+                    <a class="btn btn-light" href="/notifications"><i class="fa fa-envelope-square" style="color:red;"></i>Notifications</a>
+                {% else %}
                     <a class="btn btn-light" href="/notifications"><i class="fa fa-envelope-square"></i>Notifications</a>
-                </div>
+                {% endif %}
+
+                {% if has_unread_chat == True %}
+                    <a class="btn btn-light" href="{% url 'room' %}"><i class="fa fa-comments" style="color:red;"></i>Chat</a>
+                {% else %}
+                    <a class="btn btn-light" href="{% url 'room' %}"><i class="fa fa-comments"></i>Chat</a>
+                {% endif %}
             </div>
+        </div>
 
-            <div class="container">
+        <div class="container">
 
-                <div class="limiter">
-                    <div class="container-login100" style="background-image: url('../static/images/bg-01.jpg');">
-                        <div class="wrap-login100 p-l-110 p-r-110 p-t-62 p-b-33">
+            <div class="limiter">
+                <div class="container-login100" style="background-image: url('../static/images/bg-01.jpg');">
+                    <div class="wrap-login100 p-l-110 p-r-110 p-t-62 p-b-33">
 
-                            <span class="login100-form-title p-b-53">
-                                Launch a project
-                            </span>
+                        <span class="login100-form-title p-b-53">
+                            Launch a project
+                        </span>
 
-                            <div>
+                        <div>
 
-                                <div class="collapse navbar-collapse" id="navbarCollapse">
-                                    <form class="form-inline mt-2 mt-md-0" method="get" action="{% url 'searchLocation' %}">
-                                        <input class="form-control mr-sm-2" type="text" placeholder="Search location here" aria-label="Search" name="query" style="margin-top: 5px;" id="query">
-                                        <button class="btn btn-primary" type="submit" name="search" id="search" style="margin-top: 5px;"><span class="glyphicon glyphicon-search"></span></button>
-                                        {% csrf_token %}
-                                    </form>
+                            <div class="collapse navbar-collapse" id="navbarCollapse">
+                                <form class="form-inline mt-2 mt-md-0" method="get" action="{% url 'searchLocation' %}">
+                                    <input class="form-control mr-sm-2" type="text" placeholder="Search location here" aria-label="Search" name="query" style="margin-top: 5px;" id="query">
+                                    <button class="btn btn-primary" type="submit" name="search" id="search" style="margin-top: 5px;"><span class="glyphicon glyphicon-search"></span></button>
+                                    {% csrf_token %}
+                                </form>
 
-                                    <br/>
+                                <br/>
 
-                                    <div class="locations">
-                                        {% for l in locations %}
-                                        <li>
+                                <div class="locations">
+                                    {% for l in locations %}
+                                    <li>
                                         <button class="btn btn-primary" class="location" type="button" onclick="setLocation('{{l.name}}', '{{l.id}}')">{{l.name}}</button>
                                         <br/>
                                         <font>{{l.address}}</font>
-                                        </li>
-                                        {% endfor %}
-                                    </div>
-
+                                    </li>
+                                    {% endfor %}
                                 </div>
-
-
-                                {% if link %}
-                                    <div>
-                                        <a href={{link}}>{{place_name}}</a>
-                                    </div>
-                                {% endif %}
 
                             </div>
 
-                            <form class="login100-form validate-form flex-sb flex-w"  enctype="multipart/form-data" action="{% url 'launCh' %}" method="post">
-                                {% csrf_token %}
 
-                                <div class="p-t-31 p-b-9">
-                                    <span class="txt1">
-                                        Project Title
-                                    </span>
-                                </div>
-
-                                <div class="wrap-input100 validate-input" data-validate = "Username is required">
-                                    <input class="input100" type="text" name="title" >
-                                    <span class="focus-input100"></span>
-                                </div>
-
-                                <div class="p-t-13 p-b-9">
-                                    <span class="txt1">
-                                        Location
-                                    </span>
-                                </div>
-
-                                <div class="wrap-input100 validate-input" data-validate = "Username is required">
-                                    <input class="input100" type="text" name="location" id="location"/>
-                                    <input type="hidden" name="location_id" id="location_id" />
-                                    <span class="focus-input100"></span>
-                                </div>
-
-                                <div class="p-t-13 p-b-9">
-                                    <span class="txt1">
-                                        PayPal Email Account
-                                    </span>
-                                </div>
-                                <div class="wrap-input100 validate-input" data-validate = "Username is required">
-                                    <input class="input100" type="text" name="paypal_email" id="paypal_email"/>
-                                    <span class="focus-input100"></span>
-                                </div>
-
-                                <br/>
-                                <div class="p-t-13 p-b-9">
-                                    <span class="txt1">
-                                        Description
-                                    </span>
-                                </div>
-                                <div class="wrap-input100 validate-input" data-validate = "Username is required">
-                                    <textarea class="form-control" id="exampleFormControlTextarea1" rows="6" name="description"></textarea>
-                                    <span class="focus-input100"></span>
-                                </div>
-
-                                <div class="p-t-13 p-b-9">
-                                    <span class="txt1">
-                                        Target Money
-                                    </span>
-                                </div>
-                                <div class="wrap-input100 validate-input" data-validate = "Username is required">
-                                    <div class="input-group">
-                                        <input type="text" class="form-control" aria-label="Amount (to the nearest dollar)" name="target_money">
-                                    </div>
-                                    <span class="focus-input100"></span>
-                                </div>
-
-                                <div class="row">
-                                    <div class="col-sm">
-                                        <div class="p-t-13 p-b-9">
-                                            <span class="txt1">
-                                                Start Time
-                                            </span>
-                                        </div>
-
-                                        <div class="form-group">
-                                            <div class='input-group date' id='datetimepicker1'>
-                                                <input type='text' class="form-control" name="start_time" id="start_time"/>
-                                                <span class="input-group-addon">
-                                                    <span class="glyphicon glyphicon-calendar"></span>
-                                                </span>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="col-sm">
-                                        <div class="p-t-13 p-b-9">
-                                            <span class="txt1">
-                                                End Time
-                                            </span>
-                                        </div>
-                                        <div class="form-group">
-                                            <div class='input-group date' id='datetimepicker2'>
-                                                <input type='text' class="form-control" name="end_time" id="end_time"/>
-                                                <span class="input-group-addon">
-                                                    <span class="glyphicon glyphicon-calendar"></span>
-                                                </span>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                </div>
-
-
-                                <div class="form-group">
-                                    <label>Upload Image</label>
-                                    <div class="input-group">
-                                        <span class="input-group-btn">
-                                            <span class="btn btn-default btn-file">
-                                                Browse… <input type="file" id="imgInp" name="image">
-                                            </span>
-                                        </span>
-                                        <input type="text" class="form-control" readonly>
-                                    </div>
-                                </div>
-
-                                <div class="container-login100-form-btn m-t-17">
-                                    <input class="login100-form-btn" type="submit", value="Submit">
-                                </div>
-
-                            </form>
+                            {% if link %}
+                            <div>
+                                <a href={{link}}>{{place_name}}</a>
+                            </div>
+                            {% endif %}
 
                         </div>
+
+                        <form class="login100-form validate-form flex-sb flex-w"  enctype="multipart/form-data" action="{% url 'launCh' %}" method="post">
+                            {% csrf_token %}
+
+                            <div class="p-t-31 p-b-9">
+                                <span class="txt1">
+                                    Project Title
+                                </span>
+                            </div>
+
+                            <div class="wrap-input100 validate-input" data-validate = "Username is required">
+                                <input class="input100" type="text" name="title" >
+                                <span class="focus-input100"></span>
+                            </div>
+
+                            <div class="p-t-13 p-b-9">
+                                <span class="txt1">
+                                    Location
+                                </span>
+                            </div>
+
+                            <div class="wrap-input100 validate-input" data-validate = "Username is required">
+                                <input class="input100" type="text" name="location" id="location"/>
+                                <input type="hidden" name="location_id" id="location_id" />
+                                <span class="focus-input100"></span>
+                            </div>
+
+                            <div class="p-t-13 p-b-9">
+                                <span class="txt1">
+                                    PayPal Email Account
+                                </span>
+                            </div>
+                            <div class="wrap-input100 validate-input" data-validate = "Username is required">
+                                <input class="input100" type="text" name="paypal_email" id="paypal_email"/>
+                                <span class="focus-input100"></span>
+                            </div>
+
+                            <br/>
+                            <div class="p-t-13 p-b-9">
+                                <span class="txt1">
+                                    Description
+                                </span>
+                            </div>
+                            <div class="wrap-input100 validate-input" data-validate = "Username is required">
+                                <textarea class="form-control" id="exampleFormControlTextarea1" rows="6" name="description"></textarea>
+                                <span class="focus-input100"></span>
+                            </div>
+
+                            <div class="p-t-13 p-b-9">
+                                <span class="txt1">
+                                    Target Money
+                                </span>
+                            </div>
+                            <div class="wrap-input100 validate-input" data-validate = "Username is required">
+                                <div class="input-group">
+                                    <input type="text" class="form-control" aria-label="Amount (to the nearest dollar)" name="target_money">
+                                </div>
+                                <span class="focus-input100"></span>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-sm">
+                                    <div class="p-t-13 p-b-9">
+                                        <span class="txt1">
+                                            Start Time
+                                        </span>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <div class='input-group date' id='datetimepicker1'>
+                                            <input type='text' class="form-control" name="start_time" id="start_time"/>
+                                            <span class="input-group-addon">
+                                                <span class="glyphicon glyphicon-calendar"></span>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-sm">
+                                    <div class="p-t-13 p-b-9">
+                                        <span class="txt1">
+                                            End Time
+                                        </span>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class='input-group date' id='datetimepicker2'>
+                                            <input type='text' class="form-control" name="end_time" id="end_time"/>
+                                            <span class="input-group-addon">
+                                                <span class="glyphicon glyphicon-calendar"></span>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+
+
+                            <div class="form-group">
+                                <label>Upload Image</label>
+                                <div class="input-group">
+                                    <span class="input-group-btn">
+                                        <span class="btn btn-default btn-file">
+                                            Browse… <input type="file" id="imgInp" name="image">
+                                        </span>
+                                    </span>
+                                    <input type="text" class="form-control" readonly>
+                                </div>
+                            </div>
+
+                            <div class="container-login100-form-btn m-t-17">
+                                <input class="login100-form-btn" type="submit", value="Submit">
+                            </div>
+
+                        </form>
+
                     </div>
                 </div>
-
             </div>
+
         </div>
+    </div>
 
     <!-- /#wrapper -->
     <!-- Bootstrap core JavaScript -->
@@ -298,41 +307,41 @@
         });
 
         $(document).ready( function() {
-    	$(document).on('change', '.btn-file :file', function() {
-		var input = $(this),
-			label = input.val().replace(/\\/g, '/').replace(/.*\//, '');
-		input.trigger('fileselect', [label]);
-		});
+           $(document).on('change', '.btn-file :file', function() {
+              var input = $(this),
+              label = input.val().replace(/\\/g, '/').replace(/.*\//, '');
+              input.trigger('fileselect', [label]);
+          });
 
-		$('.btn-file :file').on('fileselect', function(event, label) {
+           $('.btn-file :file').on('fileselect', function(event, label) {
 
-		    var input = $(this).parents('.input-group').find(':text'),
-		        log = label;
+              var input = $(this).parents('.input-group').find(':text'),
+              log = label;
 
-		    if( input.length ) {
-		        input.val(log);
-		    } else {
-		        if( log ) alert(log);
-		    }
+              if( input.length ) {
+                  input.val(log);
+              } else {
+                  if( log ) alert(log);
+              }
 
-		});
-		function readURL(input) {
-		    if (input.files && input.files[0]) {
-		        var reader = new FileReader();
+          });
+           function readURL(input) {
+              if (input.files && input.files[0]) {
+                  var reader = new FileReader();
 
-		        reader.onload = function (e) {
-		            $('#img-upload').attr('src', e.target.result);
-		        }
+                  reader.onload = function (e) {
+                      $('#img-upload').attr('src', e.target.result);
+                  }
 
-		        reader.readAsDataURL(input.files[0]);
-		    }
-		}
+                  reader.readAsDataURL(input.files[0]);
+              }
+          }
 
-		$("#imgInp").change(function(){
-		    readURL(this);
-		});
-	});
-    </script>
+          $("#imgInp").change(function(){
+              readURL(this);
+          });
+      });
+  </script>
 
 </body>
 
