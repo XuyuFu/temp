@@ -138,6 +138,7 @@
                                     <div class="locations">
                                         {% for l in locations %}
                                         <button class="btn btn-primary" class="location" type="button" onclick="setLocation('{{l.name}}', '{{l.id}}')">{{l.name}}</button>
+                                            <font>{{l.address}}</font>
                                         {% endfor %}
                                     </div>
 
@@ -221,7 +222,7 @@
 
                                         <div class="form-group">
                                             <div class='input-group date' id='datetimepicker1'>
-                                                <input type='text' class="form-control"/>
+                                                <input type='text' class="form-control" name="start_time" id="start_time"/>
                                                 <span class="input-group-addon">
                                                     <span class="glyphicon glyphicon-calendar"></span>
                                                 </span>
@@ -237,7 +238,7 @@
                                         </div>
                                         <div class="form-group">
                                             <div class='input-group date' id='datetimepicker2'>
-                                                <input type='text' class="form-control"/>
+                                                <input type='text' class="form-control" name="end_time" id="end_time"/>
                                                 <span class="input-group-addon">
                                                     <span class="glyphicon glyphicon-calendar"></span>
                                                 </span>

@@ -106,29 +106,41 @@
 
             <div class="jumbotron">
                 <div class="comment">
+                    <div class="row">
+                        <div class="col-sm">    
+                            <h1>Paint the fence</h1>
+                            <div 
+                            <div>
+                                <p style="float: left;">
+                                    <img title="profile image" class="img-circle img-responsive profile-img" src="images/default.png" height="180px" width="180px" align="middle"/>
+                                </p>
+                                <br>
+                                <br>
+                                <h3>Posted by: <a href="/profile/{{activity.launcher.username}}">{{activity.launcher.username}}</a></h3>
+                                <h3>on {{activity.post_time}}</h3>
+                                <br>
+                                <br>
+                                <br>
 
-                    <h1>Paint the fence</h1>
+                            </div>
 
-                    <div>
-                        <p style="float: left;">
-                            <img title="profile image" class="img-circle img-responsive profile-img" src="images/default.png" height="180px" width="180px" align="middle"/>
-                        </p>
-                        <br>
-                        <br>
-                        <h3>Posted by: <a href="/profile/{{activity.launcher.username}}">{{activity.launcher.username}}</a></h3>
-                        <h3>on {{activity.post_time}}</h3>
-                        <br>
-                        <br>
-                        <br>
+                            <h3>Location: {{activity.location}}</h3>
+                            <p>{{activity.content}}</p>
 
+                            <h7>Target amount: ${{activity.target_money}}</h7>
+
+                            <h7>Follower: 10 Donator: 2</h7>  
+                        </div>
+                        <div class="col-sm"> 
+                            <div>
+                                <form method="post" action="{% url 'pay' activity.id %}" id="donate-{{ activity.id }}">
+                                    <input id="t_amount" name="t_amount" type="text" value="0"/>
+                                    <input type="submit" class="btn" value="donate" id="donate_amount"/>
+                                    {% csrf_token %}
+                                </form>
+                            </div>
+                        </div>
                     </div>
-
-                    <h3>Location: {{activity.location}}</h3>
-                    <p>{{activity.content}}</p>
-
-                    <h7>Target amount: ${{activity.target_money}}</h7>
-
-                    <h7>Follower: 10 Donator: 2</h7>  
                 </div>
 
                 <hr>

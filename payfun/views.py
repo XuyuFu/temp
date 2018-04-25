@@ -15,6 +15,7 @@ from payfun.models import Profile, SponserAndActivity, Notification
 from payfun.forms import LaunchForm, ProfileForm, EditForm, ProgressForm
 from .payment import payment
 from .paydetails import paydetails
+from .trans import trans
 import pytz
 import json
 from django.utils import timezone
@@ -177,16 +178,25 @@ def launch(request):
     #     print("000")
     #     context = { 'form': launch_form}
     #     return render(request, 'launch.html', context)
+    start_time =  request.POST.get('start_time')
+    start_time_list = start_time.split('/')
+    start_time = ''+ start_time_list[1] + ' ' + start_time_list[0]+ ' '+ start_time_list[2] + ' ' + '1:00AM'
+    end_time   =  request.POST.get('end_time')
+    end_time_list = end_time.split('/')
+    end_time = ''+ end_time_list[1] + ' ' + end_time_list[0]+ ' '+ end_time_list[2] + ' ' + '1:00AM'
+
+    start_time1 = datetime.strptime(start_time, '%m %d %Y %I:%M%p')
+    end_time1 = datetime.strptime(end_time, '%m %d %Y %I:%M%p')
+
     print("----")
     user = request.user
     user_type = type(user)
-
     print("paypal email" + request.POST.get("paypal_email"))
 
     lauched_activity = Activity(content = request.POST.get('description'),location = request.POST.get('location'),
                                 location_id=request.POST.get('location_id'), target_money=request.POST.get('target_money'),
                                 picture=request.FILES['image'],title=request.POST.get('title'),launcher=request.user,
-                                post_time=timezone.now(),start_time=timezone.now(),end_time= timezone.now(),is_end=False,
+                                post_time=timezone.now(),start_time= start_time1,end_time= end_time1,is_end=False,
                                 is_success=False, is_start=False, paypal_account=request.POST.get('paypal_email'))
 
     # launch_form_final = LaunchForm(request.POST, request.FILES)
@@ -720,8 +730,8 @@ def followings(request):
 def pay(request, activity_id):
     recipient_email = "fuxuyu-facilitator@outlook.com"
     # recipient_email = "fuxuyu-organizer@outlook.com"
-    dollars = "1"
-
+    dollars = request.POST['t_amount']
+    print(dollars)
     sponsor = request.user
     # activity = Activity.objects.filter(id=activity_id)
     activity = Activity.objects.get(id=activity_id)
@@ -730,31 +740,30 @@ def pay(request, activity_id):
     transaction.save()
     return redirect(redirect_address)
 
-def transfer(request, dollars, recipient_email):
+def transfer(recipient_email, dollars):
     # is there a problem? I think the dollars should be retrieved from the request parameters
 
     # Get the paypal redirect address from payment.py:
-    redirect_address, pay_key = transfer(recipient_email, dollars)
-
-    return redirect(redirect_address) 
-    # 这样写给了一个return的redirect，可能是不用返回的
+    print("transfer")
+    # Get the paypal redirect address from payment.py:
+    print("the email", recipient_email, "the amount", dollars)
+    redirect_address = trans(recipient_email, dollars)
+    # return redirect(redirect_address) 
+    redirect(redirect_address)
 
     # payment(recipient_email, dollars)
     # return render(request, "paybutton.html")
 
 @login_required
-def refund(request):
+def refund(rpayKey, amount):
     # get the paykey and user from the corresponding database tables
     # how to get the sponser
-    sponser = request.user
-    transaction = SponserAndActivity.objects.filter(sponsor=sponser)
-    payKey = transaction.pay_key
-    info = paydetails(payKey)
-    email = info[1]
-    dollars = info[2]
-    redirect_address = payment(email, dollars)
-    return redirect(redirect_address)
-     # 这样写给了一个return的redirect，可能是不用返回的
+    print("refund")
+    email = paydetails(payKey)
+    print("get the information")
+    print("the email:", email, " the dollars:", amount)
+    redirect_address = trans(email, amount)
+    redirect(redirect_address)
 
 @login_required()
 def payhome(request):
