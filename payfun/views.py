@@ -300,6 +300,7 @@ def profile(request, user_name):
                 else :
                     fail_account1 = fail_account1 + 1
 
+            followees = groupByNum(followees, 4)
 
             context = {
                 'activity_list': activity_list,
@@ -396,6 +397,7 @@ def profile(request, user_name):
                     }
         my_entry = Profile.objects.get(username = request.user.username)
         followees = my_entry.followee.all()
+        followees = groupByNum(followees, 4)
         context['followees'] = followees
         context['error'] = errors
         return render(request, 'profile.html', context)
@@ -842,12 +844,31 @@ def get_all(request):
     data1 = json.dumps(data)
     return HttpResponse(data1, content_type='application/json')
 
-
+@login_required
 def test(request):
     return render(request, 'test.html', {})
 
 # return the chatting room
-def room(request, room_name):
+'''def room(request, room_name):
+    return render(request, 'chat.html', {
+        'room_name_json': mark_safe(json.dumps(room_name))
+    })'''
+
+# return the chatting room
+@login_required
+def room(request, participant_name):
+    participant = User.objects.get(username=participant_name)
+
+    username = request.user.username
+
+    room_name = username + '-' + participant_name
+
+    try:
+        chatNotification = ChatNotification.objects.get(room_id=room_name)
+    except:
+        chatNotification = ChatNotification(room_id=room_name, user1=request.user, user2=participant, read=false)
+        chatNotification.save()
+
     return render(request, 'chat.html', {
         'room_name_json': mark_safe(json.dumps(room_name))
     })

@@ -6,5 +6,5 @@ from . import views
 urlpatterns = [
 	url(r'^test/', views.test, name='test'),
 	url(r'^test_chat/', views.test_chat, name='test_chat'),
-    url(r'^(?P<room_name>[^/]+)/$', views.room, name='room'),
+    url(r'^(?P<participant_name>[^/]+)/$', views.room, name='room'),
 ]

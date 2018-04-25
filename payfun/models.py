@@ -32,10 +32,7 @@ class Activity(models.Model):
 	followee = models.ManyToManyField(User, related_name='followeeForActivity')
 	sponseree = models.ManyToManyField(User, related_name='sponsereeForActivity')
 	paypal_account = models.CharField(max_length=1000)
-# <<<<<<< HEAD
-	
 
-# =======
 # 	followee = models.ManyToManyField(User, related_name='followeeForActivity')
 # 	sponseree = models.ManyToManyField(User, related_name='sponsereeForActivity')
 # >>>>>>> 7e37414f9f910d65ebd0ad466c58d7e4fe644c12
@@ -75,6 +72,18 @@ class Notification(models.Model):
 	time = models.DateTimeField()
 	read = models.BooleanField()
 
+class ChatNotification(models.Model):
+	room_id = models.CharField(max_length=100)
+	user1 = models.ForeignKey(User, on_delete=models.CASCADE, related_name='user1')
+	user2 = models.ForeignKey(User, on_delete=models.CASCADE, related_name='user2')
+	time = models.DateTimeField(auto_now_add=True)
+	read = models.BooleanField()
+
+class ChatLog(models.Model):
+	room_id = models.CharField(max_length=100)
+	message = models.CharField(max_length=100)
+	time = models.DateTimeField(auto_now_add=True)
+
 class Profile(models.Model):
 	username         = models.CharField(max_length=40)
 	first_name       = models.CharField(max_length=40,default="")
@@ -86,10 +95,5 @@ class Profile(models.Model):
 	sponser_activity = models.ManyToManyField(Activity, related_name="sponser_activity")
 	picture          = models.FileField(upload_to="images", blank=True)
 	content_type     = models.CharField(max_length=50,default="")
-
-class ChatLog(models.Model):
-	room_id = models.CharField(max_length=100)
-	message = models.CharField(max_length=100)
-	time = models.DateTimeField(auto_now_add=True)
 
 

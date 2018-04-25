@@ -103,37 +103,26 @@
         <div>
         <ul class="nav nav-pills nav-stacked col-sm-2 col-md-2">
             <ol>
-                <li class="" width="auto"><a href="#tab_a" data-toggle="pill">Pill A</a></li>
-                <li class=""><a href="#tab_b" data-toggle="pill">Pill B</a></li>
-                <li class="active"><a href="#tab_c" data-toggle="pill">Pill C</a></li>
-                <li><a href="#tab_d" data-toggle="pill">Pill D</a></li>
+                {% for room in rooms%}
+                    <li class=""><a href="#tab_{{room.room_id}}" data-toggle="pill">
+                        {% if user.username == room.user1.username %}
+                            {{ room.user2.username }}
+                        {% else %}
+                            {{ room.user1.username }}
+                        {% endif %}
+                    </a></li>
+                {% endfor %}
             <ol>
         </ul>
 
         <div class="tab-content col-sm-10 col-md-10">
-            <div class="tab-pane" id="tab_a">
-                <textarea id="chat-log" cols="100" rows="20"></textarea><br/>
-                <input id="chat-message-input" type="text" size="100"/><br/>
-                <input class="btn btn-primary" id="chat-message-submit" type="button" value="Send"/>
-            </div>
-
-            <div class="tab-pane" id="tab_b">
-                <textarea id="chat-log" cols="100" rows="20"></textarea><br/>
-                <input id="chat-message-input" type="text" size="100"/><br/>
-                <input class="btn btn-primary" id="chat-message-submit" type="button" value="Send"/>
-            </div>
-
-            <div class="tab-pane active" id="tab_c">
-                <textarea id="chat-log" cols="100" rows="20"></textarea><br/>
-                <input id="chat-message-input" type="text" size="100"/><br/>
-                <input class="btn btn-primary" id="chat-message-submit" type="button" value="Send"/>
-            </div>
-
-            <div class="tab-pane" id="tab_d">
-                <textarea id="chat-log" cols="100" rows="20"></textarea><br/>
-                <input id="chat-message-input" type="text" size="100"/><br/>
-                <input class="btn btn-primary" id="chat-message-submit" type="button" value="Send"/>
-            </div>
+            {% for room in rooms %}
+                <div class="tab-pane" id="tab_{{room.room_id}}">
+                    <textarea id="chat-log-{{room.room_id}}" cols="100" rows="20"></textarea><br/>
+                    <input id="chat-message-input-{{room.room_id}}" type="text" size="100"/><br/>
+                    <input class="btn btn-primary" id="chat-message-submit-{{room.room_id}}" type="button" value="Send"/>
+                </div>
+            {% endfor %}
         </div><!-- tab content -->
     </div>
 
