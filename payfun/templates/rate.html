@@ -1,0 +1,18 @@
+{% if notification.has_rate == False %}
+    <h1>please rate for Activity {{ notification.activity.title }}</h1>
+    <form action="/rate/{{ notification.id }}" method="post">
+        <input type="radio" name="rate" value="1">1<br>
+        <input type="radio" name="rate" value="2">2<br>
+        <input type="radio" name="rate" value="3">3<br>
+        <input type="radio" name="rate" value="4">4<br>
+        <input type="radio" name="rate" value="5" checked>5<br>
+        <input type="submit"  value="Submit" >
+    {% csrf_token %}
+    </form>
+
+{% endif %}
+
+{% if notification.has_rate == True%}
+    <h1>You have rated for Activity {{ notification.activity.title }}, Thank you!</h1>
+
+{% endif %}

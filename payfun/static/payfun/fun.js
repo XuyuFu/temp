@@ -9,7 +9,7 @@ function addComment(activity_id) {
     console.log(itemTextValue);
     itemTextElement.value = '';
     displayError_comment('');
-    //alert("1");
+    alert("1");
 
 
     if (itemTextValue != "") {
@@ -20,14 +20,14 @@ function addComment(activity_id) {
             dataType: "json",
             success: function (response) {
                 updateHelper(response);
-                //alert("2");
+                alert("2");
             }
         });
     }
 }
 
 function updateHelper(response) {
-    //alert("3");
+    alert("3");
     var comments = JSON.parse(response['comments']);
     console.log(comments);
     var progress = JSON.parse(response['progress']);
@@ -44,7 +44,7 @@ function updateHelper(response) {
         $(target).append(this.html);
         //alert("00");
     });
-    //alert("4");
+    alert("4");
 }
 
 function addProgress(activity_id) {

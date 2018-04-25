@@ -32,6 +32,8 @@ class Activity(models.Model):
 	followee = models.ManyToManyField(User, related_name='followeeForActivity')
 	sponseree = models.ManyToManyField(User, related_name='sponsereeForActivity')
 	paypal_account = models.CharField(max_length=1000)
+	total_rate = models.IntegerField(default=0)
+	rate_cur = models.FloatField(default=0)
 
 # 	followee = models.ManyToManyField(User, related_name='followeeForActivity')
 # 	sponseree = models.ManyToManyField(User, related_name='sponsereeForActivity')
@@ -71,6 +73,7 @@ class Notification(models.Model):
 	notification_content = models.CharField(max_length=150)
 	time = models.DateTimeField()
 	read = models.BooleanField()
+	has_rate = models.BooleanField(default=False)
 
 class ChatNotification(models.Model):
 	room_id = models.CharField(max_length=100)
@@ -95,5 +98,8 @@ class Profile(models.Model):
 	sponser_activity = models.ManyToManyField(Activity, related_name="sponser_activity")
 	picture          = models.FileField(upload_to="images", blank=True)
 	content_type     = models.CharField(max_length=50,default="")
+	total_rate = models.IntegerField(default=0)
+	rate_cur = models.FloatField(default=0)
+
 
 

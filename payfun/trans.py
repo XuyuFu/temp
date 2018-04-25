@@ -3,10 +3,8 @@ import collections
 import requests
 import json
 from .paydetails import paydetails
-from django.contrib.auth.decorators import login_required
 
-@login_required
-def transfer(recipient_email, dollars):
+def trans(recipient_email, dollars):
 
     headers = {
         #The first three are from my developer account
@@ -54,9 +52,9 @@ def transfer(recipient_email, dollars):
     #print(response.content.decode())
     response_string = response.content.decode("utf-8")
     response_dict = json.loads(response_string)
-    # store the payKey into database, per transaction per paykey
+    print("the response dic", response_dict)
     payKey = response_dict.get("payKey")
-    paydetails(payKey)
-
+    print("the payKey: ", payKey)
+    
     paypal_redirect_string = "https://www.sandbox.paypal.com/cgi-bin/webscr?cmd=_ap-payment&paykey=" + payKey
-    return paypal_redirect_string, payKey
+    return paypal_redirect_string

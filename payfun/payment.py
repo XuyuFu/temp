@@ -52,7 +52,6 @@ def payment(recipient_email, dollars):
     response_string = response.content.decode("utf-8")
     response_dict = json.loads(response_string)
     payKey = response_dict.get("payKey")
-    paydetails(payKey)
 
     paypal_redirect_string = "https://www.sandbox.paypal.com/cgi-bin/webscr?cmd=_ap-payment&paykey=" + payKey
     return paypal_redirect_string, payKey

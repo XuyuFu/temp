@@ -120,6 +120,7 @@
                             <h4>on {{activity.post_time}}</h4>
                         </div>
                         <div class="col-sm">
+<<<<<<< HEAD
                             <input id="amount" name="amount" type="text" value="0"/>
                             <div id="paypal-button-container"></div>
                             <input type="image" src="https://www.paypalobjects.com/webstatic/en_US/i/btn/png/btn_addtocart_120x26.png" alt="Add to Cart" name="submit">
@@ -174,6 +175,13 @@
 
                             <input type="image" src="https://www.paypalobjects.com/en_US/i/btn/btn_buynowCC_LG.gif" border="0" name="submit" alt="PayPal - The safer, easier way to pay online!">
                             <img alt="" border="0" src="https://www.paypalobjects.com/en_US/i/scr/pixel.gif" width="1" height="1">
+=======
+                            <form method="post" action="{% url 'pay' activity.id %}" id="donate-{{ activity.id }}">
+                                <input id="t_amount" name="t_amount" type="text" value="0"/>
+                                <input type="submit" class="btn" value="donate" id="donate_amount"/>
+                                {% csrf_token %}
+                            </form>
+>>>>>>> a4b76512b7269c0e1f052c08c5fd2b6ca80b6a43
                         </div>
                     </div>
 
