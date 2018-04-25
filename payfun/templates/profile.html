@@ -1,3 +1,247 @@
+{% extends "base.html" %}
+
+{% block customHead%}
+
+<link href="../../static/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+
+{% endblock %}
+
+{% block content %}
+
+<div class="span3 well">
+    <center>
+        <img src="https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcRbezqZpEuwGSvitKy3wrwnth5kysKdRqBW54cAszm_wiutku3R" name="aboutme" width="140" height="140" border="0" class="img-circle"></a>
+        <h3 class="media-heading">{{ entry.username }}<small>USA</small></h3>
+        <span><strong>Tag: </strong></span>
+        <span class="label label-warning">Writer</span>
+        <span class="label label-info">Sports lover</span>
+        <span class="label label-success">Explorer</span>
+        <br/>
+        <i class="glyphicon glyphicon-envelope"></i>email@example.com
+        <h5>Credits: 10</h5>
+            <!-- a class="btn btn-primary" href="{% url 'followUser' entry.username %}">Follow</a-->
+            {% if tag == '1' %}
+            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#Edit-profile">
+                Edit profile
+            </button>
+            {% else %}
+                <!-- Follow and unfollow -->
+                {% if followma == '1' %}
+                    <a class="btn btn-success" href="{% url 'followUser' entry.username %}">Follow</a>
+                {% else %}
+                    <a class="btn btn-danger" href="{% url 'unfollowUser' entry.username %}">Unfollow</a>
+                {% endif %}
+            {% endif %}
+
+            <!-- Modal -->
+            <div class="modal fade" id="Edit-profile" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Edit your profile here</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+
+                        <form method="post" enctype="multipart/form-data" action="/profile/{{user.username}}">
+                            <table>
+                                <img src="/photo/{{ entry.username }}" width="200px">
+                                {% for field in form.visible_fields %}
+                                <tr>
+                                    <td>{{field.label_tag}}</td>
+                                    <td>{{field}}</td>
+                                    <td class="error">
+                                        {% for error in field.errors %} {{error}} {% endfor %}
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </table>
+
+                            {% for field in form.hidden_fields %}
+                            {{field}} {{field.errors}}
+                            {% endfor %}
+                            {% csrf_token %}
+                            <input type="submit" value="Update">
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                <button type="submit" class="btn btn-primary">Save changes</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+        </center>
+        <hr>
+        <div class="modal-body">
+            <center>
+                <p class="text-left"><h3><strong>Biography</strong></h3>
+                <br>
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut sem dui, tempor sit amet commodo a, vulputate vel tellus.</p>
+                <br>
+            </center>
+        </div>
+    </div>
+
+    <center>
+        {% if success_account1 == 0 and fail_account1 == 0 %}
+            <h3>The user doesn't have any finished projects right now</h3>
+        {% else %}
+            <div id="piechart"></div>
+        {% endif %}
+
+        {% if activity_list%}
+            <div id="timeline" style="height: 180px;"></div>
+        {% else %}
+            <h3>The user hasn't launched any projects yet</h3>
+        {% endif %}
+
+    </center>
+
+    <br />
+    <br />
+    <br />
+
+    <h3>Projects</h3>
+    <hr>
+
+    <div class="row">
+
+        <div class="col-sm">
+            <div class="card text-white bg-dark mb-3" style="max-width: 40rem">
+                <img class="card-img-top" src="./images/cat.jpg" alt="Card image cap">
+                <div class="card-header">Streaking</div>
+                <div class="card-body">
+                    <h5 class="card-title">By: <a href="">Bo Jing</a> on 2/6/2018</h5>
+                    <p class="card-text">Location: Pittsburgh</p>
+                    <p class="card-text">I plan to go to streak to raise money for some adoptable cats</p>
+                    <a href="#" class="btn btn-primary">Know more</a>
+                    <a href="#" class="btn btn-warning">Abort</a>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="col-sm">
+
+            <div class="card text-white bg-dark mb-3" style="max-width: 40rem;">
+                <img class="card-img-top" src="./images/fence.jpg" alt="Card image cap">
+                <div class="card-header">Paint the fence</div>
+                <div class="card-body">
+                    <h5 class="card-title">By: <a href="">David</a> on 2/6/2018</h5>
+                    <p class="card-text">Location: Pittsburgh<p>
+                    <p class="card-text">I am going to pain the CMU fence at 3/30/2018 to celebrate the first week back from ....</p>
+                    <a href="#" class="btn btn-primary">Know more</a>
+                    <a href="#" class="btn btn-warning">Abort</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-sm">
+            <div class="card text-white bg-dark mb-3" style="max-width: 40rem;">
+                <img class="card-img-top" src="./images/carnival.jpg" alt="Card image cap">
+                <div class="card-header">Carnival Day!!!</div>
+                <div class="card-body">
+                    <h5 class="card-title">By: <a href="">Xuyu</a> on 2/6/2018</h5>
+                    <p class="card-text">Location: Pittsburgh<p>
+                    <p class="card-text">Let's donate to have a better carnival day!</p>
+                    <a href="#" class="btn btn-primary">Know more</a>
+                    <a href="#" class="btn btn-warning">Abort</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <h3>Followings</h3>
+    <hr>
+
+    {% for followee_group in followees %}
+    <div class="row">
+        {% for followee in followee_group %}
+        <div class="col-sm">
+            <img title="profile image" class="img-circle img-responsive profile-img" src="{% url 'getPhoto' followee.id %}" height="180px" width="180px" align="middle"/>
+            <a class="btn btn-danger">Unfollow</a>
+            <a class="btn btn-success" href="{% url 'create_room' followee.username %}">Chat</a>
+        </div>
+        {% endfor %}
+    </div>
+    {% endfor %}
+
+
+
+{% endblock %}
+
+{% block customScript%}
+
+<script type="text/javascript">
+
+// Load google charts
+google.charts.load('current', {'packages':['corechart', 'timeline']});
+google.charts.setOnLoadCallback(drawPieChart);
+google.charts.setOnLoadCallback(drawTimeline);
+
+// Draw the chart and set the chart values
+function drawPieChart() {
+    var data = google.visualization.arrayToDataTable([
+        ['Task', 'Hours per Day'],
+        ['projects failed', parseInt('{{ fail_account1 }}')],
+        ['projects succedded', parseInt('{{ success_account1 }}')],
+    ]);
+
+    // Optional; add a title and set the width and height of the chart
+    var options = {'title':'Project details', 'width':400, 'height':300, is3D: true,};
+
+    // Display the chart inside the <div> element with id="piechart"
+    var chart = new google.visualization.PieChart(document.getElementById('piechart'));
+    chart.draw(data, options);
+}
+
+function drawTimeline() {
+    var container = document.getElementById('timeline');
+    var chart = new google.visualization.Timeline(container);
+    var dataTable = new google.visualization.DataTable();
+
+    dataTable.addColumn({ type: 'string', id: 'President' });
+    dataTable.addColumn({ type: 'string', id: 'Name' });
+    dataTable.addColumn({ type: 'date', id: 'Start' });
+    dataTable.addColumn({ type: 'date', id: 'End' });
+
+    {% for activity in activity_list %}
+        var startDate = new Date({{activity.start_time}});
+        var endDate = new Date({{activity.end_time}});
+        dataTable.addRows([
+            [ '{{forloop.counter0}}', '{{activity.title}}', 
+            new Date(startDate.getFullYear(), startDate.getMonth(), startDate.getDate()), 
+            new Date(endDate.getFullYear(), endDate.getMonth(), endDate.getDate()) ]]);
+        {% endfor %}
+
+        chart.draw(dataTable);
+}
+
+</script>
+
+<script>
+    document.querySelector('#room-name-input').focus();
+    document.querySelector('#room-name-input').onkeyup = function(e) {
+        if (e.keyCode === 13) {  // enter, return
+            document.querySelector('#room-name-submit').click();
+        }
+    };
+
+    document.querySelector('#room-name-submit').onclick = function(e) {
+        var roomName = document.querySelector('#room-name-input').value;
+        window.location.pathname = '/chat/' + roomName + '/';
+    };
+
+</script>s
+
+{% endblock %}
+
+
+
+
 <!DOCTYPE html>
 <html lang="en">
 

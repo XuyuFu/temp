@@ -57,7 +57,7 @@ urlpatterns = [
     # url(r'^.*$', RedirectView.as_view(pattern_name='login_page', permanent=False)),
     url(r'^oauth/', include('social_django.urls', namespace='social')),
     url(r'^logout/$', views.logout, name='logout'),
-    url(r'^notifications/$', views.notification, name='notification'),
+    url(r'^notifications/$', views.notification, name='notifications'),
     url(r'^getAllProgressAndComment/$', views.get_all),
     url(r'^chat/', include('payfun.urls')),
     url(r'^ratepage/(?P<notification_id>\S+)$', views.ratepage, name="ratepage"),

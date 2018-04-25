@@ -1,3 +1,54 @@
+{% extends "base.html" %}
+
+{% block customHead %}
+<link href="../static/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+
+    {% for activity_group in activities %}
+        <div class="row">
+            {% for activity in activity_group %}
+            <div class="col-sm" width="250px">
+                <div class="card text-white bg-dark mb-3" style="max-width: 40rem">
+                    <img class="card-img-top" src="{% url 'getPhoto' activity.id %}" alt="Card image cap">
+                    <div class="card-header">{{activity.title}}</div>
+                    <div class="card-body">
+                        <h5 class="card-title">By: <a href="{% url 'profile' activity.launcher.username %}">{{activity.launcher.username}}</a> on {{activity.post_time}}</h5>
+                        <p class="card-text">Location: <a href="https://www.google.com/maps/search/?api=1&query=any&query_place_id={{ activity.location_id }}">{{activity.location}}</a></p>
+                        <p class="card-text">{{activity.content}}</p>
+                        <a class="btn btn-primary" href="/activitydetail/{{activity.id }}">Know More</a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% endfor %}
+
+        <table cellspacing="10">
+            {% for activity_group in activities %}
+            <tr contenteditable="true">
+                {% for activity in activity_group %}
+                <td colspan="2">
+                    <div class="card text-white bg-dark mb-3" style="max-width: 40rem">
+                        <img class="card-img-top" src="{% url 'getPhoto' activity.id %}" alt="Card image cap">
+                        <div class="card-header">{{activity.title}}</div>
+                        <div class="card-body">
+                            <h5 class="card-title">By: <a href="{% url 'profile' activity.launcher.username %}">{{activity.launcher.username}}</a> on {{activity.post_time}}</h5>
+                            <p class="card-text">Location: <a href="https://www.google.com/maps/search/?api=1&query=any&query_place_id={{ activity.location_id }}">{{activity.location}}</a></p>
+                            <p class="card-text">{{activity.content}}</p>
+                            <a class="btn btn-primary" href="/activitydetail/{{activity.id }}">Know More</a>
+                        </div>
+                    </div>
+                    <td>
+                    {% endfor %}
+                </tr>
+                {% endfor %}
+        </table>
+
+{% endblock %}
+
+
 <!DOCTYPE html>
 <html lang="en">
 

@@ -1,4 +1,6 @@
 
+
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -120,68 +122,12 @@
                             <h4>on {{activity.post_time}}</h4>
                         </div>
                         <div class="col-sm">
-<<<<<<< HEAD
-                            <input id="amount" name="amount" type="text" value="0"/>
-                            <div id="paypal-button-container"></div>
-                            <input type="image" src="https://www.paypalobjects.com/webstatic/en_US/i/btn/png/btn_addtocart_120x26.png" alt="Add to Cart" name="submit">
-                            <img alt="" src="https://www.paypalobjects.com/en_US/i/scr/pixel.gif" width="1" height="1">
-                            <div class="row">
-                                <div class="col-sm">
-                                    <div>
-                                        <form method="post" action="{% url 'pay' activity.id %}" id="donate-{{ activity.id }}">
-                                            {% csrf_token %}
-                                            {{ form }}
-                                            <input type="submit" alt="Donate" class="btn" value="donate" id="donate_amount"/>
-                                        </form>
-                                    </div>
-                                </div>
 
-                                <script>
-                                    paypal.Button.render({
-                                        env: 'sandbox', // sandbox | production
-                                        // PayPal Client IDs - replace with your own
-                                        // Create a PayPal app: https://developer.paypal.com/developer/applications/create
-                                        client: {
-                                            sandbox:    'AXXyS4oWEGmGgsZDp5IFJqse17JG4gh0LTy6Ab2qLdJrl8IL5mXQ64S1BXm4GDMeQJNatWv-amMpoL0I',
-                                            production: 'fuxuyu@outlook.com'
-                                        },
-                                        // Show the buyer a 'Pay Now' button in the checkout flow
-                                        commit: true,
-                                        // payment() is called when the button is clicked
-                                        payment: function(data, actions) {
-                                            var amount = document.getElementById("amount");
-                                            // Make a call to the REST api to create the payment
-                                            return actions.payment.create({
-                                                payment: {
-                                                    transactions: [
-                                                    {
-                                                        amount: { total: amount.value, currency: 'USD' }
-                                                    }
-                                                    ]
-                                                }
-                                            });
-                                        },
-
-                                        // onAuthorize() is called when the buyer approves the payment
-                                         onAuthorize: function(data, actions) {
-                                            // Make a call to the REST api to execute the payment
-                                            return actions.payment.execute().then(function() {
-                                                window.alert('Payment Complete!');
-                                            });
-                                        }
-                                    }, '#paypal-button-container');
-                                </script>
-                            </div>
-
-                            <input type="image" src="https://www.paypalobjects.com/en_US/i/btn/btn_buynowCC_LG.gif" border="0" name="submit" alt="PayPal - The safer, easier way to pay online!">
-                            <img alt="" border="0" src="https://www.paypalobjects.com/en_US/i/scr/pixel.gif" width="1" height="1">
-=======
                             <form method="post" action="{% url 'pay' activity.id %}" id="donate-{{ activity.id }}">
                                 <input id="t_amount" name="t_amount" type="text" value="0"/>
                                 <input type="submit" class="btn" value="donate" id="donate_amount"/>
                                 {% csrf_token %}
                             </form>
->>>>>>> a4b76512b7269c0e1f052c08c5fd2b6ca80b6a43
                         </div>
                     </div>
 
