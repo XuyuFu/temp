@@ -130,7 +130,7 @@
                                         <form method="post" action="{% url 'pay' activity.id %}" id="donate-{{ activity.id }}">
                                             {% csrf_token %}
                                             {{ form }}
-                                            <input type="submit image" src="https://www.paypalobjects.com/webstatic/en_US/i/btn/png/btn_addtocart_120x26.png" alt="Donate" class="btn" value="donate" id="donate_amount"/>
+                                            <input type="submit" alt="Donate" class="btn" value="donate" id="donate_amount"/>
                                         </form>
                                     </div>
                                 </div>

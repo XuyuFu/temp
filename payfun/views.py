@@ -10,7 +10,7 @@ from django.contrib.auth.tokens import default_token_generator
 from django.http import HttpResponse, Http404
 from django.contrib.auth.decorators import login_required
 from django.db import transaction
-from payfun.models import Followed, Activity, Comment, Progress
+from payfun.models import Followed, Activity, Comment, Progress, ChatNotification
 from payfun.models import Profile, SponserAndActivity, Notification
 from payfun.forms import LaunchForm, ProfileForm, EditForm, ProgressForm
 from .payment import payment
@@ -33,6 +33,8 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.utils.safestring import mark_safe
 import json
+
+from django.db.models import Q
 
 
 def login_page(request):
@@ -809,7 +811,15 @@ def global_stream(request):
     for notification in all_notification:
         if notification.read == False:
             tag = True
-    return render(request, 'global.html', {'activities': activity_groups, 'has_unread':tag})
+
+    tag_chat = False
+    chatNotifications = ChatNotification.objects.filter(read=False)
+    if len(chatNotifications) != 0:
+        tag_chat = True
+
+    return render(request, 'global.html', {'activities': activity_groups, 'has_unread':tag, 'has_unread_chat':tag_chat})
+
+    
 
 
 @login_required
@@ -856,21 +866,30 @@ def test(request):
 
 # return the chatting room
 @login_required
-def room(request, participant_name):
+def create_room(request, participant_name):
     participant = User.objects.get(username=participant_name)
 
     username = request.user.username
-
     room_name = username + '-' + participant_name
 
     try:
         chatNotification = ChatNotification.objects.get(room_id=room_name)
     except:
-        chatNotification = ChatNotification(room_id=room_name, user1=request.user, user2=participant, read=false)
+        chatNotification = ChatNotification(room_id=room_name, user1=request.user, user2=participant, read=False)
         chatNotification.save()
 
-    return render(request, 'chat.html', {
-        'room_name_json': mark_safe(json.dumps(room_name))
+    chatNotifications = ChatNotification.objects.filter(Q(user1=request.user) | Q(user2=request.user))
+
+    return render(request, 'test_chat.html', {
+        'room_name_json': mark_safe(json.dumps(room_name)),
+        'rooms': chatNotifications,
+    })
+
+@login_required
+def room(request):
+    chatNotifications = ChatNotification.objects.filter(Q(user1=request.user) | Q(user2=request.user))
+    return render(request, 'test_chat.html', {
+        'rooms': chatNotifications,
     })
 
 # the new chat bar

@@ -102,11 +102,18 @@
                 <a class="btn btn-light" href="{% url 'donations' %}"><i class="fa fa-money"></i>Donations</a>
                 <a class="btn btn-light" href="{% url 'followings' %}"><i class="fa fa-star"></i>Followings</a>
                 <a class="btn btn-light" href="{% url 'profile' user.username %}"><i class="fa fa-user"></i></i>Profiles</a>
-                <a class="btn btn-light" href="/notifications"><i class="fa fa-envelope-square"></i>Notifications</a>
                 {% if has_unread == True %}
-                    asdasdasdasdasdsadasd
+                    <a class="btn btn-light" href="/notifications"><i class="fa fa-envelope-square" style="color:red;"></i>Notifications</a>
+                {% else %}
+                    <a class="btn btn-light" href="/notifications"><i class="fa fa-envelope-square"></i>Notifications</a>
                 {% endif %}
-                <a class="btn btn-light" href="test_chat.html"><i class="fa fa-comments"></i>Chat</a>
+
+                {% if has_unread_chat == True %}
+                    <a class="btn btn-light" href="{% url 'room' %}"><i class="fa fa-comments" style="color:red;"></i>Chat</a>
+                {% else %}
+                    <a class="btn btn-light" href="{% url 'room' %}"><i class="fa fa-comments"></i>Chat</a>
+                {% endif %}
+            
             </div>
             
         </div>
@@ -154,7 +161,6 @@
                     </tr>
                 {% endfor %}
                 </table>
-
 
             </div>
 
